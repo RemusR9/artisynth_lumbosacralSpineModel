@@ -4,7 +4,7 @@
  * This software is freely available under a 3-clause BSD license. Please see
  * the LICENSE file in the GitHub distribution directory for details.
  */
-package artisynth.models.passiveLSS_PlosOne;
+package artisynth.models.passiveComponents_PlosOne;
 
 import java.awt.Color;
 import java.io.BufferedReader;

@@ -10,7 +10,7 @@
  * novel hybrid model of the lumbosacral spine in ArtiSynth – The passive 
  * structures", PlosOne, 2021
  */
-package artisynth.models.passiveLSS_PlosOne;
+package artisynth.models.passiveComponents_PlosOne;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -55,9 +55,9 @@ import artisynth.core.modelbase.RenderableComponentList;
 import artisynth.core.probes.DataFunction;
 import artisynth.core.workspace.DriverInterface;
 import artisynth.core.workspace.RootModel;
-import artisynth.models.passiveLSS_PlosOne.MyImportFunctions.CollFiberData_MP;
-import artisynth.models.passiveLSS_PlosOne.MyImportFunctions.LigamentData;
-import artisynth.models.passiveLSS_PlosOne.MyImportFunctions.LigamentMPData;
+import artisynth.models.passiveComponents_PlosOne.MyImportFunctions.CollFiberData_MP;
+import artisynth.models.passiveComponents_PlosOne.MyImportFunctions.LigamentData;
+import artisynth.models.passiveComponents_PlosOne.MyImportFunctions.LigamentMPData;
 import artisynth.models.passiveLSS_PlosOne.myMaterials.LookUpTableMaterial;
 import artisynth.models.passiveLSS_PlosOne.myMaterials.MyUWLigamentMaterial;
 import maspack.geometry.PolygonalMesh;
