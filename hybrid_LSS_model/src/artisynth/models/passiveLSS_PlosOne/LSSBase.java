@@ -213,12 +213,10 @@ public class LSSBase extends RootModel {
 	
 	
 	
-	
-	// _________________________________________________________________________
-	
-	
-	private void addContacts() {		
-		// Create CONTACTS/COLLISION for facet joints		
+	/**
+	 * Create contacts & collisions for facet joints
+	 */
+	private void addContacts() {						
 		// Set General collisions between objects
 		L12Np.setCollidable(Collidability.OFF);
 		L23Np.setCollidable(Collidability.OFF);
@@ -315,11 +313,11 @@ public class LSSBase extends RootModel {
 
 
 
-
-
+	/**
+	 * Create intervertebral ligaments, set material properties (using 
+	 * customized UWLigamentMaterial), and set render props
+	 */
 	private void addLigaments() {
-		// Create intervertebral ligaments, set material properties (using 
-		// customized UWLigamentMaterial), and set render props
 		ComponentList<ModelComponent> ligs = 
 				new ComponentList<ModelComponent>(ModelComponent.class, "ligaments");
 	
@@ -488,10 +486,11 @@ public class LSSBase extends RootModel {
 
 
 
-
-	private void addCollagenFibers() throws IOException {
-		// Create Multi-Point collagen fibers (CF) from imported text-files
-		// containing node info about CF paths. 
+	/**
+	 *  Create Multi-Point collagen fibers (CF) from imported text-files
+	 *	containing node info about CF paths.
+	 */
+	private void addCollagenFibers() throws IOException { 
 		ComponentList<ModelComponent> CFs = 
 				new ComponentList<ModelComponent>(ModelComponent.class, "collagenFibers");
 		
@@ -794,10 +793,11 @@ public class LSSBase extends RootModel {
 
 
 
-
+	/**
+	 * Create and attach optional FrameMarker (FM) (e.g. for measurements 
+	 * via MATLAB)
+	 */
 	private void addFrameMarkers(boolean showFM) {		
-		// Create and attach FrameMarker (FM) (e.g. for measurements via MATLAB)		
-		
 		// FM attached to disc (e.g. disc bulge measurement)		
 		createFM_FEM (new FrameMarker ("FM_L12_ante"), 
 				new Point3d(21.41e-3, 0, 170.03e-3),         L12An, showFM); // central & most anterior point
@@ -1294,9 +1294,10 @@ public class LSSBase extends RootModel {
 
 
 
-
+	/**
+	 * 	Add boundary conditions resp. external loads via Wrenches
+	 */
 	private void addMyExternalLoads(double framesAxisLength) {
-		// Add boundary conditions resp. external loads via Wrenches
 		// -------------------------------------------------
 		// ------------------- EXTERNAL LOADS --------------
 		// -------------------------------------------------
@@ -1453,9 +1454,10 @@ public class LSSBase extends RootModel {
 
 
 
-
-	private void setFEDiscMaterials() {
-		// Set Discs (AN & NP) material properties
+	/**
+	 * Set intervertebral discs (AN & NP) material properties
+	 */
+	private void setFEDiscMaterials() {		
 		// Nucleus pulposus (NP) - Yeoh: g10, g20, g30, K; 
 		double[] Y_Np = {0.20*1E6, 0.20*1E6, 6.0E6, 1.80E8};   // [Pa]
 		CubicHyperelastic Mat_Np = new CubicHyperelastic(); 
@@ -1533,9 +1535,10 @@ public class LSSBase extends RootModel {
 
 
 
-
-	private void addFEDiscs() {
-		// Create FE discs (AN & NP) from imported mesh data 
+	/**
+	 * Create FE discs (AN & NP) from imported mesh data 
+	 */
+	private void addFEDiscs() {		
 		ComponentList<FemModel3d> NPs = 
 				new ComponentList<FemModel3d>(FemModel3d.class, "nucleusFE");
 		ComponentList<FemModel3d> ANs = 
@@ -1711,9 +1714,10 @@ public class LSSBase extends RootModel {
 
 	
 	
-	
-	private void addFEFacets(){		
-		// Create the inferior articular facets from imported mesh data
+	/**
+	 * Create the inferior articular facets from imported mesh data
+	 */
+	private void addFEFacets(){				
 		ComponentList<ModelComponent> facsFE = 
 				new ComponentList<ModelComponent>(ModelComponent.class, "facetsFE");
 		
