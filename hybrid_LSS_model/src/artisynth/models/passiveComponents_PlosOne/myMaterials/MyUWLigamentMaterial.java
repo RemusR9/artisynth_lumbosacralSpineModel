@@ -1,4 +1,4 @@
-package artisynth.models.passiveLSS_PlosOne.myMaterials;
+package artisynth.models.passiveComponents_PlosOne.myMaterials;
 
 import artisynth.core.materials.AxialMaterial;
 import maspack.properties.PropertyList;
