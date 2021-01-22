@@ -1,10 +1,13 @@
-# hybrid_lumbosacral_spine_model [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4453703.svg)](https://doi.org/10.5281/zenodo.4453703) 
+# Hybrid lumbosacral spine model [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4453703.svg)](https://doi.org/10.5281/zenodo.4453703) 
 
-Hybrid model of the human lumbosacral spine build in ArtiSynth
+This is the calibrated and validated passive lumbosacral spine model based on the data of the Male Visible Human Project. The model is built in ArtiSynth 
 
 
 
-If you use the passive hybrid model of the lumbosacral spine in your research citing the following reference: 
-...
+If you use the model in your research please cite the the following reference: Remus R, Lipphaus A, Neumann M, Bender B. (2021) Calibration and validation of a novel hybrid model of the 1 lumbosacral spine in ArtiSynth – The passive structures. PlosOne. Under Review.
 
-Here goes a detailed description ...
+
+
+
+
+Here goes a more detailed description of the model ...
