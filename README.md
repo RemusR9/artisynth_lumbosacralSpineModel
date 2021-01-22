@@ -4,7 +4,7 @@ This is the calibrated and validated passive lumbosacral spine model based on th
 
 
 
-If you use the model in your research please cite the the following reference: Remus R, Lipphaus A, Neumann M, Bender B. (2021) Calibration and validation of a novel hybrid model of the 1 lumbosacral spine in ArtiSynth – The passive structures. PlosOne. Under Review.
+If you use the model in your research please cite the the following reference: Remus R, Lipphaus A, Neumann M, Bender B. (2021) Calibration and validation of a novel hybrid model of the lumbosacral spine in ArtiSynth – The passive structures. PlosOne. Under Review.
 
 
 
