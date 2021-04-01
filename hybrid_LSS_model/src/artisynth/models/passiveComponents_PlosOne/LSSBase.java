@@ -42,6 +42,7 @@ import artisynth.core.mechmodels.CollisionResponse;
 import artisynth.core.mechmodels.Frame;
 import artisynth.core.mechmodels.FrameMarker;
 import artisynth.core.mechmodels.MechModel;
+import artisynth.core.mechmodels.MechSystemSolver.Integrator;
 import artisynth.core.mechmodels.MultiPointMuscle;
 import artisynth.core.mechmodels.MultiPointSpring;
 import artisynth.core.mechmodels.MuscleExciter;
@@ -114,8 +115,7 @@ public class LSSBase extends RootModel {
 	ComponentList<FemModel3d> L12AnR1234, L23AnR1234, L34AnR1234, L45AnR1234, 
 		L51AnR1234;
 	
-	ComponentList<FemModel3d> L12FacL1, L12FacL2, L23FacL2, L23FacL3, L34FacL3, 
-		L34FacL4, L45FacL4, L45FacL5, L51FacL5, L51FacS1;
+	ComponentList<FemModel3d> L12FacL1, L23FacL2, L34FacL3, L45FacL4, L51FacL5;
 	
 	// Ligament lists for FSU levels
 	ComponentList<ModelComponent> L12Ligs, L23Ligs, L34Ligs, L45Ligs, L51Ligs; 
@@ -161,7 +161,7 @@ public class LSSBase extends RootModel {
 		mech = new MechModel ("mech"); 
 		addModel (mech);
 		
-		//mech.setIntegrator(Integrator.ConstrainedBackwardEuler); 
+		mech.setIntegrator(Integrator.ConstrainedBackwardEuler); 
 		mech.setMaxStepSize (0.01);
 		mech.setProfiling (false);
 		mech.setGravity (gavityVec);
@@ -193,7 +193,7 @@ public class LSSBase extends RootModel {
 		addContacts();
 				
 		// Deactivate FL in active model
-		addFollowerLoad(1175, false);
+		addFollowerLoad(700, false);
 		
 		addMyExternalLoads(0.000);  // hide frames with = 0  // 0.025
 		
@@ -236,6 +236,17 @@ public class LSSBase extends RootModel {
 		L4RB.setCollidable(Collidability.OFF);
 		L5RB.setCollidable(Collidability.OFF);
 		S1RB.setCollidable(Collidability.OFF);
+		
+		L12FacL1l.setCollidable(Collidability.OFF);
+		L12FacL1r.setCollidable(Collidability.OFF);
+		L23FacL2l.setCollidable(Collidability.OFF);
+		L23FacL2r.setCollidable(Collidability.OFF);
+		L34FacL3l.setCollidable(Collidability.OFF);
+		L34FacL3r.setCollidable(Collidability.OFF);
+		L45FacL4l.setCollidable(Collidability.OFF);
+		L45FacL4r.setCollidable(Collidability.OFF);
+		L51FacL5l.setCollidable(Collidability.OFF);
+		L51FacL5r.setCollidable(Collidability.OFF);
 		
 				
 		// -------------------------------------------
@@ -1747,15 +1758,10 @@ public class LSSBase extends RootModel {
 		
 		
 		L12FacL1 = new ComponentList<FemModel3d> (FemModel3d.class, "L12FacL1");
-		L12FacL2 = new ComponentList<FemModel3d> (FemModel3d.class, "L12FacL2");
 		L23FacL2 = new ComponentList<FemModel3d> (FemModel3d.class, "L23FacL2");
-		L23FacL3 = new ComponentList<FemModel3d> (FemModel3d.class, "L23FacL3");
 		L34FacL3 = new ComponentList<FemModel3d> (FemModel3d.class, "L34FacL3");
-		L34FacL4 = new ComponentList<FemModel3d> (FemModel3d.class, "L34FacL4");
 		L45FacL4 = new ComponentList<FemModel3d> (FemModel3d.class, "L45FacL4");
-		L45FacL5 = new ComponentList<FemModel3d> (FemModel3d.class, "L45FacL5");
 		L51FacL5 = new ComponentList<FemModel3d> (FemModel3d.class, "L51FacL5");
-		L51FacS1 = new ComponentList<FemModel3d> (FemModel3d.class, "L51FacS1");
 		
 		L12FacL1.add(L12FacL1l);
 		L23FacL2.add(L23FacL2l);
@@ -1831,7 +1837,8 @@ public class LSSBase extends RootModel {
 	 * Set model constraints
 	 */
 	private void addConstraints() {	
-		S1RB.setDynamic(false);  // fix sacrum in space					
+		L5RB.setDynamic(true);  // optional for lumbar spine evaluation
+		S1RB.setDynamic(false); // fix sacrum in space					
 	}
 
 
