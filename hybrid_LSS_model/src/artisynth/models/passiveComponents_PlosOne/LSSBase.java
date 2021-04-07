@@ -8,7 +8,7 @@
  * 
  * Remus R, Lipphaus A, Neumann M, Bender B. "Calibration and validation of a 
  * novel hybrid model of the lumbosacral spine in ArtiSynth – The passive 
- * structures", PlosOne, 2021
+ * structures", PLOS ONE (accepted), 2021
  */
 package artisynth.models.passiveComponents_PlosOne;
 
@@ -79,24 +79,22 @@ import maspack.util.Clonable;
 
 public class LSSBase extends RootModel {
 		
-	// Create the mech model
 	MechModel mech;
-		
-	// Model components
+	
 	// Lumbar vertebrae and vertebral bodies
 	RigidBody L1RB, L2RB, L3RB, L4RB, L5RB, S1RB, PelvisRB, ThoraxRB;
   		
 	// Proc. articularis superior
 	RigidBody L2FacRB, L3FacRB, L4FacRB, L5FacRB, S1FacRB;
 
-	// Anulus ground substances of discs
-	// Single AN-rings
+	// Anulus (AN) = Anulus ground substances (AGS) + collagen fibers (CF)
+	// Single rings of AGS
 	FemModel3d L12AnR1, L12AnR2, L12AnR3, L12AnR4, L23AnR1, L23AnR2, L23AnR3, 
 		L23AnR4, L34AnR1, L34AnR2, L34AnR3, L34AnR4, L45AnR1, L45AnR2, L45AnR3, 
 		L45AnR4, L51AnR1, L51AnR2, L51AnR3, L51AnR4;	
-	// Merged AN-rings
+	// Merged AGS rings
 	FemModel3d L12An, L23An, L34An, L45An, L51An;	
-	// Nucleus pulposus between vertebrae
+	// Nucleus pulposus (NP)
 	FemModel3d L12Np, L23Np, L34Np, L45Np, L51Np;
    
 	// Facet cartilage of facies articularis inferior
@@ -108,18 +106,17 @@ public class LSSBase extends RootModel {
 		L34_postTriPM, L34_latTriPM, L45_postTriPM, L45_latTriPM, 
 		L51_postTriPM, L51_latTriPM;
 
-	// Frames for external forces via wrenches on vertebrae centers
+	// Frames for external forces via wrenches on vertebral centers
 	Frame Fr_WrL1, Fr_WrL2, Fr_WrL3, Fr_WrL4, Fr_WrL5;
 	
-	// Global component Lists
+	// Global component lists
 	ComponentList<FemModel3d> L12AnR1234, L23AnR1234, L34AnR1234, L45AnR1234, 
 		L51AnR1234;
-	
 	ComponentList<FemModel3d> L12FacL1, L23FacL2, L34FacL3, L45FacL4, L51FacL5;
 	
 	// Ligament lists for FSU levels
 	ComponentList<ModelComponent> L12Ligs, L23Ligs, L34Ligs, L45Ligs, L51Ligs; 
-	// Collagen fibers component list
+	// Collagen fibers list
 	ComponentList<ModelComponent> CF_L12, CF_L23, CF_L34, CF_L45, CF_L51;
 
 	// Global node lists
@@ -161,7 +158,7 @@ public class LSSBase extends RootModel {
 		mech = new MechModel ("mech"); 
 		addModel (mech);
 		
-		mech.setIntegrator(Integrator.ConstrainedBackwardEuler); 
+		mech.setIntegrator (Integrator.ConstrainedBackwardEuler); 
 		mech.setMaxStepSize (0.01);
 		mech.setProfiling (false);
 		mech.setGravity (gavityVec);
@@ -205,8 +202,7 @@ public class LSSBase extends RootModel {
 		mech.remove (L45AnR1234);
 		mech.remove (L51AnR1234);		
 	              
-		addMyControlPanel();     
-			
+		addMyControlPanel();     		
 	}	
 	
 
@@ -2121,7 +2117,7 @@ public class LSSBase extends RootModel {
 	
 	// Remove nodes in nList1 when also listed in nList2 and returns a 
 	// new list nList3 without double nodes
-	protected LinkedList<FemNode3d> RemoveDoubleNodes_SetSet(
+	protected LinkedList<FemNode3d> RemoveDoubleNodes_SetSet (
 			LinkedList<FemNode3d> nList1, LinkedList<FemNode3d> nList2) {
 	   LinkedList<FemNode3d> nList3 = new LinkedList<FemNode3d>();
 	   for(FemNode3d n : nList1) {
@@ -2133,19 +2129,7 @@ public class LSSBase extends RootModel {
 	}
 	
 	
-	// The same like above but with HashSet<> as input instead of LinkedList<>
-	protected HashSet<FemNode3d> RemoveDoubleNodes_SetSet_Hash (
-			HashSet<FemNode3d> nList1, HashSet<FemNode3d> nList2) {
-		HashSet<FemNode3d> nList3 = new HashSet<FemNode3d>();
-		for(FemNode3d n : nList1) {
-			if(!nList2.contains(n)) {
-				nList3.add(n);   
-			}
-		}   
-		return nList3;
-	}
 	
-		
 	
 	private void CreateUWLigament (ComponentList<ModelComponent> compList, 
 			LigamentData ligsDataImp, int ligIndx, RigidBody RB1, RigidBody RB2,
@@ -2194,7 +2178,7 @@ public class LSSBase extends RootModel {
 	/**
 	 *  Create one Multi-Point (MP) ligament and return it to compList
 	 */
-	private void CreateUWLigamentMP(ComponentList<ModelComponent> compList, 
+	private void CreateUWLigamentMP (ComponentList<ModelComponent> compList, 
 			LigamentMPData ligsMPDataImp, int ligIndx, RigidBody RB1, 
 			RigidBody RB2, MechModel mech, Color LigColor) {	
 		LinkedList<FemNode3d[]> ligMPNodes 	= ligsMPDataImp.getMPNodes();
@@ -2229,7 +2213,7 @@ public class LSSBase extends RootModel {
 			}
 			else {
 				// Connect all other MP Spring points to FE nodes (of AN)
-				ligMP0.addPoint(ligMPNodes.get (ligIndx)[P]);
+				ligMP0.addPoint (ligMPNodes.get (ligIndx)[P]);
 			}
 		}
 		// Add to component list
@@ -2239,8 +2223,8 @@ public class LSSBase extends RootModel {
 		// define material parameters
 		double epsr = ligsEpsr.get(ligIndx);
 		double lMPGeo = ligMP0.getLength();  // get (real rest) length of MP spring
-		ligMPMat.setLinearStiffness(ligsLinStiff.get (ligIndx));  	   // [N/m]
-		ligMPMat.setLigamentTransitionStrain (ligsEpst.get(ligIndx));   // [m/m]
+		ligMPMat.setLinearStiffness (ligsLinStiff.get (ligIndx));  	   // [N/m]
+		ligMPMat.setLigamentTransitionStrain (ligsEpst.get(ligIndx));  // [m/m]
 		ligMPMat.setReferenceStrain (epsr);      					   // [m/m]
 		
 		// l0 is NOT the initial length here but the reference length 
@@ -2254,7 +2238,7 @@ public class LSSBase extends RootModel {
 	}
 	
 	
-	protected Particle addParticleRB(ComponentList<Particle> partList, 
+	protected Particle addParticleRB (ComponentList<Particle> partList, 
 			String string, RigidBody RB, double x, double y, double z) {		
 		Particle p = new Particle (string, /*mass*/0.0, x, y, z);
 		partList.add (p);
@@ -2263,7 +2247,7 @@ public class LSSBase extends RootModel {
 	}
 		
 	
-	protected FrameMarker createFM_RB(FrameMarker FM, Point3d loc, 
+	protected FrameMarker createFM_RB (FrameMarker FM, Point3d loc, 
 			RigidBody RB, Boolean visible) {
 		FrameMarker myFM = FM;
 		// Add FrameMarker to RB and mechModel
@@ -2271,9 +2255,9 @@ public class LSSBase extends RootModel {
 		
 		// Render Props
 		if (visible == true) {
-			RenderProps.setPointStyle(myFM, Renderer.PointStyle.POINT);
+			RenderProps.setPointStyle (myFM, Renderer.PointStyle.POINT);
 		    RenderProps.setPointSize (myFM, 8);
-		    RenderProps.setPointColor(myFM, new Color(51,255,104));
+		    RenderProps.setPointColor (myFM, new Color(51,255,104));
 		}	
 		return myFM;
 	}
@@ -2284,7 +2268,8 @@ public class LSSBase extends RootModel {
 		FrameMarker myFM = FM;
 		// Find node at Location loc and create new Frame at this location
 		FemNode3d Nd = FEM.findNearestNode(loc, 0.01);		
-		Frame FR = new Frame(new RigidTransform3d(Nd.getPosition().x, Nd.getPosition().y, Nd.getPosition().z));		
+		Frame FR = new Frame (new RigidTransform3d (
+				Nd.getPosition().x, Nd.getPosition().y, Nd.getPosition().z));		
 		// Add Frame and to FEM at the found node
 		mech.addFrame(FR);
 		mech.attachFrame(FR, FEM);		
@@ -2404,10 +2389,8 @@ public class LSSBase extends RootModel {
 
 	
 	
-
-	   
-	// ------------- MATERIAL PROPERTIES ------------------
-	
+   
+	// ------------- MATERIAL PROPERTIES ------------------	
 	// Set the Collagen Fiber (CF) material properties	
 	protected void createCF_MP(	CollFiberData_MP CFData, 
 			RenderableComponentList<MultiPointSpring> CF_RCL, 
@@ -2515,7 +2498,7 @@ public class LSSBase extends RootModel {
 			
 			
 			LookUpTableMaterial myCFbrMat = (LookUpTableMaterial)CFbr.getMaterial();
-			// set material properties, especially for damping reasons (keep minimal)
+			// Set material properties, especially for damping reasons (keep minimal)
 			myCFbrMat.setStiffnessDamping (0.001);  
 			myCFbrMat.setNormalizedDamping (100);  
 			// approx. slack until that point (assumed for all CF)
@@ -2531,154 +2514,9 @@ public class LSSBase extends RootModel {
 	}
 		
 	
-	
-	
-	// ----------------------------------------------------------------------
-	// ------------------ Numerical Monitor Probes --------------------------
-	// ----------------------------------------------------------------------
-	// Calculate IDP(s) for numerical monitor probe via node stresses
-	public class calcIDPFunction implements DataFunction, Clonable {
-		
-		LinkedList<FemModel3d> FEsToEvaluate;
-		double conv = 1.0;
-		
-		public void eval (VectorNd vec, double t, double trel) {			
-			// save IDP to vec for external use
-			int i = 0;
-			for (FemModel3d myFeModel : FEsToEvaluate) {
-				vec.set (i, calcHdyrPress(myFeModel)*conv);
-				i++;
-			}
-		}
-				
-		private double calcHdyrPress (FemModel3d FeToEvaluate) {		
-			// calculate intra-discal pressure (IDP) [Pa] in NP with assumption 
-			// of hydrostatic pressure via simulated node stresses	
-			// https://www.continuummechanics.org/hydrodeviatoricstress.html
-			double IDP = 0.0;
-			VectorNd myNodePressures = new VectorNd (FeToEvaluate.numNodes());			
-			int i = 0;
-			for(FemNode3d n : FeToEvaluate.getNodes()) {			
-				myNodePressures.add(i, -(n.getStress().m00 + n.getStress().m11 + 
-						n.getStress().m22) / 3.0);			
-				i++;
-			}	
-			// calc mean value for all nodes of FeModel
-			IDP = myNodePressures.sum() / FeToEvaluate.numNodes();
-			return IDP;
-		}
-		
-		
-		public void setFEBodies (LinkedList<FemModel3d> FeModel) {
-			FEsToEvaluate = FeModel;
-			// Activate necessary stress evaluation of model nodes
-			for (FemModel3d myFeModel : FEsToEvaluate) {
-				for (FemNode3d myNode : myFeModel.getNodes()) {
-					if (myNode.getComputeStress() != true) {
-						myNode.setComputeStress (true);
-					}
-				}
-			}
-		}
-		
-		public void setConvValue(double convFactor) {
-			conv = convFactor;
-		}
-				
-		public Object clone() throws CloneNotSupportedException {
-			return (calcIDPFunction)super.clone();
-		}	
-	}
-		
-	
-	// Calculate Facet Forces via Collision Response and known FE Contact Model
-	public class calcFForcesFunction implements DataFunction, Clonable {
-		
-		LinkedList<CollisionResponse> myCResponses;
-		LinkedList<FemModel3d> myCollFeBodies;
-		
-		public void eval (VectorNd vec, double t, double trel) {			
-			int i = 0;
-			for (CollisionResponse myCR : myCResponses) {
-				// save calculated and summed forces in vec for external use
-				vec.add(i, calcNormalContactForce (myCR, myCollFeBodies.get(i)));
-				i++;
-			}	
-		}	
-		
-				
-		private double calcNormalContactForce(CollisionResponse myCollResp, FemModel3d myCollBody) {
-			
-			double contactForceSum = 0.0;			
-			Map<Vertex3d,Vector3d> myMap = 
-					myCollResp.getContactForces(0); // CF map is at position 0			
-			// Map is empty when no node get in contact with RB	
-			int numF = myMap.size();
-			
-			if (numF > 0) {								
-				// Go through nodes of FE Collision body individually to get
-				// the surface vertexes used as keys in contact force map 
-				// until all force vectors are found - stop checking remaining
-				// nodes
-				int i = 0;
-				int f = 0;
-				int numN = myCollBody.getNodes().size();
-				while(true) {
-					FemNode3d n = myCollBody.getNode(i);							
-					Vertex3d myVertx = myCollBody.getSurfaceVertex(n); // connected to the node
-					
-					// Check if any surface vertex is associated with node
-					if (myVertx != null) {						
-						Vector3d myVec = myMap.get(myVertx);
-						// Check if any force value is stored at vertex
-						if(myVec != null) {		
-							// get force vector, calc vector norm and sum up for total contact force
-							contactForceSum = contactForceSum + myVec.norm();							
-							f++;							
-						}						
-					}						
-					i++;
-					
-					// Stop criterion: all forces are found (f=numF) or on worst 
-					// case after all nodes are checked (f=i=numN) 
-					if(i >= numN || f >= numF) {
-//						System.out.println("All forces are found at f =" + f + " and i =" + i 
-//								+ "(numN = " + numN + ") - F = " + contactForceSum + " N");
-						break;
-					}					
-				}						
-			}												
-			return contactForceSum;
-		}
-			
-				
-		public Object clone() throws CloneNotSupportedException {
-			return (calcIDPFunction)super.clone();
-		}	
-		
-		public void setCollResponses(LinkedList<CollisionResponse> CollisionResponsesList) {
-			myCResponses = CollisionResponsesList;		
-		}
-		
-		public void setCollFeBodies(LinkedList<FemModel3d> CollisionFeBodyList) {
-			myCollFeBodies = CollisionFeBodyList;
-		}
-	}
-	
-	
-	
-	
-		
 
-	// -------------------- PURE CALCULATIONS -------------------------
-	// Calculation of axial spring stiffness with literature values. For instance for fibers
-	public double calcStiffn (double crossSec, double YoungsModul, double length) {
-		double springsStiffn = YoungsModul * crossSec / length;
-		return springsStiffn;
-	}
-	
-	
-	
+
+	// -------------------- MORE CALCULATIONS ----------------------------------
 	// linspace() function: known from Matlab
 	public static double[] linspace (double start, double stop, int n) {
 		LinkedList<Double> temp = new LinkedList<Double>();
@@ -2697,19 +2535,21 @@ public class LSSBase extends RootModel {
 	
 		
 	
+	
+	// ------------------------------------------------------------------------
 	// Make background white by default and set viewers eye
 	@Override
     public void attach(DriverInterface driver) {
        super.attach (driver);      
-       GLViewer viewer = driver.getViewerManager().getViewer(0); 	  
-       viewer.setBlendSourceFactor (BlendFactor.GL_ONE_MINUS_CONSTANT_ALPHA);
-       viewer.setBlendDestFactor (BlendFactor.GL_ONE_MINUS_SRC_ALPHA);     
-       viewer.setBackgroundColor (Color.WHITE);
-       viewer.setEye (new Point3d(0.246044, -0.434962, 0.280147));
-       viewer.setCenter (new Point3d(-0.00429798, 0.0110715, 0.0601638));
+       GLViewer viewer = driver.getViewerManager().getViewer(0); 
+       if (viewer != null) {
+	       viewer.setBlendSourceFactor (BlendFactor.GL_ONE_MINUS_CONSTANT_ALPHA);
+	       viewer.setBlendDestFactor (BlendFactor.GL_ONE_MINUS_SRC_ALPHA);     
+	       viewer.setBackgroundColor (Color.WHITE);
+	       viewer.setEye (new Point3d(0.246044, -0.434962, 0.280147));
+	       viewer.setCenter (new Point3d(-0.00429798, 0.0110715, 0.0601638));
+       }
     }
-	
-	
 	
 
 }
