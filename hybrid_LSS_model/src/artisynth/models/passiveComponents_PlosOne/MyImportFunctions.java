@@ -50,6 +50,9 @@ public class MyImportFunctions {
 	
 	// ------------------------------------------------------
 	
+	public static String getGeometryDir() {
+		return geometryDir;
+	}
 	public static String getGeometrySubFolder() {	
 		return GeometrySubFolder;
 	}	

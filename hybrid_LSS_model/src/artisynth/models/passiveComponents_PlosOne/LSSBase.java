@@ -13,11 +13,11 @@
 package artisynth.models.passiveComponents_PlosOne;
 
 import java.awt.Color;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.TreeMap;
 
 import javax.swing.JLabel;
@@ -53,7 +53,6 @@ import artisynth.core.mechmodels.RigidMeshComp;
 import artisynth.core.modelbase.ComponentList;
 import artisynth.core.modelbase.ModelComponent;
 import artisynth.core.modelbase.RenderableComponentList;
-import artisynth.core.probes.DataFunction;
 import artisynth.core.workspace.DriverInterface;
 import artisynth.core.workspace.RootModel;
 import artisynth.models.passiveComponents_PlosOne.MyImportFunctions.CollFiberData_MP;
@@ -62,19 +61,16 @@ import artisynth.models.passiveComponents_PlosOne.MyImportFunctions.LigamentMPDa
 import artisynth.models.passiveComponents_PlosOne.myMaterials.LookUpTableMaterial;
 import artisynth.models.passiveComponents_PlosOne.myMaterials.MyUWLigamentMaterial;
 import maspack.geometry.PolygonalMesh;
-import maspack.geometry.Vertex3d;
 import maspack.matrix.Point3d;
 import maspack.matrix.RigidTransform3d;
 import maspack.matrix.RotationMatrix3d;
 import maspack.matrix.Vector3d;
-import maspack.matrix.VectorNd;
 import maspack.render.RenderProps;
 import maspack.render.Renderable;
 import maspack.render.Renderer;
 import maspack.render.GL.GLViewer;
 import maspack.render.GL.GLViewer.BlendFactor;
 import maspack.spatialmotion.Wrench;
-import maspack.util.Clonable;
 
 
 public class LSSBase extends RootModel {
@@ -112,7 +108,6 @@ public class LSSBase extends RootModel {
 	// Global component lists
 	ComponentList<FemModel3d> L12AnR1234, L23AnR1234, L34AnR1234, L45AnR1234, 
 		L51AnR1234;
-	ComponentList<FemModel3d> L12FacL1, L23FacL2, L34FacL3, L45FacL4, L51FacL5;
 	
 	// Ligament lists for FSU levels
 	ComponentList<ModelComponent> L12Ligs, L23Ligs, L34Ligs, L45Ligs, L51Ligs; 
@@ -141,6 +136,17 @@ public class LSSBase extends RootModel {
 	Vector3d gavityVec = new Vector3d (0, 0, -9.8);  // z-up
 	
 	
+	//--------------------------------------------------------------------------
+	// Select different card angle (CA) variations via names for ISSLS 2021 
+	// sensitivity study of L4/L5 facet joints.
+	// However, CAX* is to be understood here for all CAX. (CAX = 90° - CAX*)
+	// "CAX0" or "" is the default card set used for calibration and validation 
+	// in Remus et al. (2021), PloS ONE, 10.1371/journal.pone.0250456.
+	// For example "...p5" stands for "...+5°" and "...m5" for "...-5°"
+	boolean cardAngleStudy = false;  // for ISSLS21 study set to true
+	String cardIDISSLS = "_CAX0"; // e.g. "_CAXp5", "_CAYm2", etc.
+	//--------------------------------------------------------------------------
+	
 	
 	
 
@@ -148,10 +154,8 @@ public class LSSBase extends RootModel {
 	public void build(String[] args) throws IOException {
 		
 		// Relative folder path to the geometry files used by this model
-		String geometryRelPath = "/geometry/";
-		String fePathAddition  = "/LSS_20200529/";
+		String geometryRelPath = "geometry/";
 		MyImportFunctions.setGeometrySubFolder (geometryRelPath);
-		MyImportFunctions.setFemPathAddition (fePathAddition);
 		
 		
 		// Add the mech model to the root model
@@ -166,15 +170,15 @@ public class LSSBase extends RootModel {
 		
 		// Build LSS model
 		addRigidBones();		
-		addFacetJoints();			
+		addRBFacets();			
 		setDamping();
 		
 		addAttachments_RBRB();
 		addConstraints();		
 				
-		addAuxBodies();		
-		addFEFacets();
+		addAuxBodies();	
 		addFEDiscs();
+		addFEFacets();
 				
 		setFEDiscMaterials();
 		setFEFacMaterials();
@@ -1154,21 +1158,6 @@ public class LSSBase extends RootModel {
 		L51AnR1234u.add(MyImportFunctions.ImportNodeSet ("L51_An_R4u", L51AnR4));
 
 		
-		// L45 Fac
-		LinkedList<FemNode3d> L12FacL1lrb, L12FacL1rrb, L23FacL2lrb, 
-			L23FacL2rrb,L34FacL3lrb, L34FacL3rrb, L45FacL4lrb, L45FacL4rrb, 
-			L51FacL5lrb, L51FacL5rrb;
-		L12FacL1lrb = MyImportFunctions.ImportNodeSet ("L12_FACL_L1_RB", L12FacL1l);
-		L12FacL1rrb = MyImportFunctions.ImportNodeSet ("L12_FACR_L1_RB", L12FacL1r);
-		L23FacL2lrb = MyImportFunctions.ImportNodeSet ("L23_FACL_L2_RB", L23FacL2l);
-		L23FacL2rrb = MyImportFunctions.ImportNodeSet ("L23_FACR_L2_RB", L23FacL2r);
-		L34FacL3lrb = MyImportFunctions.ImportNodeSet ("L34_FACL_L3_RB", L34FacL3l);
-		L34FacL3rrb = MyImportFunctions.ImportNodeSet ("L34_FACR_L3_RB", L34FacL3r);
-		L45FacL4lrb = MyImportFunctions.ImportNodeSet ("L45_FACL_L4_RB", L45FacL4l);
-		L45FacL4rrb = MyImportFunctions.ImportNodeSet ("L45_FACR_L4_RB", L45FacL4r);
-		L51FacL5lrb = MyImportFunctions.ImportNodeSet ("L51_FACL_L5_RB", L51FacL5l);
-		L51FacL5rrb = MyImportFunctions.ImportNodeSet ("L51_FACR_L5_RB", L51FacL5r);
-		
 		// Remove nodes which might be listed in more than one set --> preventing errors
 		L12Npa_ou = RemoveDoubleNodes_SetSet (RemoveDoubleNodes_SetSet (L12Npa, L12Npo), L12Npu);
 		L23Npa_ou = RemoveDoubleNodes_SetSet (RemoveDoubleNodes_SetSet (L23Npa, L23Npo), L23Npu);
@@ -1251,28 +1240,15 @@ public class LSSBase extends RootModel {
 		ConnectFemToRB(L45Anu, L5RB);	
 		ConnectFemToRB(L51Ano, L5RB);
 		ConnectFemToRB(L51Anu, S1RB);
-			
-		// Connect FE nodes of facets to RB
-		ConnectFemToRB(L12FacL1lrb, L1RB);
-		ConnectFemToRB(L12FacL1rrb, L1RB);
-		ConnectFemToRB(L23FacL2lrb, L2RB);
-		ConnectFemToRB(L23FacL2rrb, L2RB);
-		ConnectFemToRB(L34FacL3lrb, L3RB);
-		ConnectFemToRB(L34FacL3rrb, L3RB);
-		ConnectFemToRB(L45FacL4lrb, L4RB);
-		ConnectFemToRB(L45FacL4rrb, L4RB);
-		ConnectFemToRB(L51FacL5lrb, L5RB);
-		ConnectFemToRB(L51FacL5rrb, L5RB);	
 	}
 
 
 
 
 	/**
-	 * Add the control panel
+	 * Create and add a control panel to change external loads
 	 */
 	private void addMyControlPanel() {
-		// Create a ControlPanel
 		ControlPanel myPanel = new ControlPanel("Simulation Controls");
 
 		myPanel.addWidget(new JLabel("External Loads:"));
@@ -1280,16 +1256,13 @@ public class LSSBase extends RootModel {
 		myPanel.addWidget("Wrench L2", Fr_WrL2, "externalForce");
 		myPanel.addWidget("Wrench L3", Fr_WrL3, "externalForce");
 		myPanel.addWidget("Wrench L4", Fr_WrL4, "externalForce");
-		myPanel.addWidget("Wrench L5", Fr_WrL5, "externalForce");
-			
+		myPanel.addWidget("Wrench L5", Fr_WrL5, "externalForce");		
 		myPanel.addWidget(new JSeparator());
 		
 		SimpleAxialMuscle myFlMat = (SimpleAxialMuscle) FL_LSSl.getMaterial();
 		double FlF = myFlMat.getMaxForce()*2;
-				//new SimpleAxialMuscle();
-		
-		
-		myPanel.addWidget(new JLabel("Follower Load Excitations: (max F = " + 
+			
+		myPanel.addWidget(new JLabel("Follower Load Excitations: (F_max = " + 
 				String.format("%.0f", FlF) + "N)"));
 		myPanel.addWidget("Total", FL_lr, "excitation");
 		myPanel.addWidget("Left side", FL_LSSl, "excitation");
@@ -1321,17 +1294,17 @@ public class LSSBase extends RootModel {
 		// Reference frames for relative pose change measurements
 		Frame Fr_WrL1_atL2, Fr_WrL2_atL3, Fr_WrL3_atL4, Fr_WrL4_atL5, Fr_WrL5_atS1;	
 			
-		Fr_WrL1 = newFrame("FrameForL1Wrench");  
-		Fr_WrL2 = newFrame("FrameForL2Wrench");  
-		Fr_WrL3 = newFrame("FrameForL3Wrench");  
-		Fr_WrL4 = newFrame("FrameForL4Wrench");  
-		Fr_WrL5 = newFrame("FrameForL5Wrench");  
+		Fr_WrL1 = newFrame ("FrameForL1Wrench");  
+		Fr_WrL2 = newFrame ("FrameForL2Wrench");  
+		Fr_WrL3 = newFrame ("FrameForL3Wrench");  
+		Fr_WrL4 = newFrame ("FrameForL4Wrench");  
+		Fr_WrL5 = newFrame ("FrameForL5Wrench");  
 			
-		Fr_WrL1_atL2 = newFrame("FrameForDiffToL1Wr");
-		Fr_WrL2_atL3 = newFrame("FrameForDiffToL2Wr");
-		Fr_WrL3_atL4 = newFrame("FrameForDiffToL3Wr");
-		Fr_WrL4_atL5 = newFrame("FrameForDiffToL4Wr");
-		Fr_WrL5_atS1 = newFrame("FrameForDiffToL5Wr");
+		Fr_WrL1_atL2 = newFrame ("FrameForDiffToL1Wr");
+		Fr_WrL2_atL3 = newFrame ("FrameForDiffToL2Wr");
+		Fr_WrL3_atL4 = newFrame ("FrameForDiffToL3Wr");
+		Fr_WrL4_atL5 = newFrame ("FrameForDiffToL4Wr");
+		Fr_WrL5_atS1 = newFrame ("FrameForDiffToL5Wr");
 		
 
 		Point3d L1_antC = new Point3d(15.33e-3, 0, 189.54e-3);   // anterior center of L1_body
@@ -1345,43 +1318,53 @@ public class LSSBase extends RootModel {
 		Point3d L4_antS = new Point3d(36.15e-3, 0,  77.91e-3);   // most anterior and superior point of L4_body  
 		Point3d L5_antS = new Point3d(33.77e-3, 0,  32.25e-3);   // most anterior and superior point of L5_body
 		
-		Vector3d L1_xAx  = L1_antC.sub(L1Body_CoM);
-		Vector3d L1_yAx  = L1_antS.sub(L1_antC);
-		Vector3d L2_xAx  = L2_antC.sub(L2Body_CoM);
-		Vector3d L2_yAx  = L2_antS.sub(L2_antC);
-		Vector3d L3_xAx  = L3_antC.sub(L3Body_CoM);
-		Vector3d L3_yAx  = L3_antS.sub(L3_antC);
-		Vector3d L4_xAx  = L4_antC.sub(L4Body_CoM);
-		Vector3d L4_yAx  = L4_antS.sub(L4_antC);	
-		Vector3d L5_xAx  = L5_antC.sub(L5Body_CoM);
-		Vector3d L5_yAx  = L5_antS.sub(L5_antC);
+		Vector3d L1_xAx  = L1_antC.sub (L1Body_CoM);
+		Vector3d L1_yAx  = L1_antS.sub (L1_antC);
+		Vector3d L2_xAx  = L2_antC.sub (L2Body_CoM);
+		Vector3d L2_yAx  = L2_antS.sub (L2_antC);
+		Vector3d L3_xAx  = L3_antC.sub (L3Body_CoM);
+		Vector3d L3_yAx  = L3_antS.sub (L3_antC);
+		Vector3d L4_xAx  = L4_antC.sub (L4Body_CoM);
+		Vector3d L4_yAx  = L4_antS.sub (L4_antC);	
+		Vector3d L5_xAx  = L5_antC.sub (L5Body_CoM);
+		Vector3d L5_yAx  = L5_antS.sub (L5_antC);
 
 		
 		// Set Pose of Frames with Wrenches
 		double rotXFrWr = 270*Math.PI/180;
-		setWrenchsPoseWithFrame(WrL1, Fr_WrL1, L1Body_CoM, L1_xAx, L1_yAx, rotXFrWr, framesAxisLength);
-		setWrenchsPoseWithFrame(WrL2, Fr_WrL2, L2Body_CoM, L2_xAx, L2_yAx, rotXFrWr, framesAxisLength);
-		setWrenchsPoseWithFrame(WrL3, Fr_WrL3, L3Body_CoM, L3_xAx, L3_yAx, rotXFrWr, framesAxisLength);
-		setWrenchsPoseWithFrame(WrL4, Fr_WrL4, L4Body_CoM, L4_xAx, L4_yAx, rotXFrWr, framesAxisLength);
-		setWrenchsPoseWithFrame(WrL5, Fr_WrL5, L5Body_CoM, L5_xAx, L5_yAx, rotXFrWr, framesAxisLength);
+		setWrenchsPoseWithFrame (WrL1, Fr_WrL1, L1Body_CoM, L1_xAx, L1_yAx, 
+				rotXFrWr, framesAxisLength);
+		setWrenchsPoseWithFrame (WrL2, Fr_WrL2, L2Body_CoM, L2_xAx, L2_yAx, 
+				rotXFrWr, framesAxisLength);
+		setWrenchsPoseWithFrame (WrL3, Fr_WrL3, L3Body_CoM, L3_xAx, L3_yAx, 
+				rotXFrWr, framesAxisLength);
+		setWrenchsPoseWithFrame (WrL4, Fr_WrL4, L4Body_CoM, L4_xAx, L4_yAx, 
+				rotXFrWr, framesAxisLength);
+		setWrenchsPoseWithFrame (WrL5, Fr_WrL5, L5Body_CoM, L5_xAx, L5_yAx, 
+				rotXFrWr, framesAxisLength);
 		
-		mech.attachFrame(Fr_WrL1, L1RB);
-		mech.attachFrame(Fr_WrL2, L2RB);
-		mech.attachFrame(Fr_WrL3, L3RB);
-		mech.attachFrame(Fr_WrL4, L4RB);
-		mech.attachFrame(Fr_WrL5, L5RB);
+		mech.attachFrame (Fr_WrL1, L1RB);
+		mech.attachFrame (Fr_WrL2, L2RB);
+		mech.attachFrame (Fr_WrL3, L3RB);
+		mech.attachFrame (Fr_WrL4, L4RB);
+		mech.attachFrame (Fr_WrL5, L5RB);
 		
 		// Set Pose of Frames only
-		setFramesPoseInSpace (Fr_WrL1_atL2, L1Body_CoM, L1_xAx, L1_yAx, rotXFrWr, framesAxisLength);
-		setFramesPoseInSpace (Fr_WrL2_atL3, L2Body_CoM, L2_xAx, L2_yAx, rotXFrWr, framesAxisLength);
-		setFramesPoseInSpace (Fr_WrL3_atL4, L3Body_CoM, L3_xAx, L3_yAx, rotXFrWr, framesAxisLength);
-		setFramesPoseInSpace (Fr_WrL4_atL5, L4Body_CoM, L4_xAx, L4_yAx, rotXFrWr, framesAxisLength);
-		setFramesPoseInSpace (Fr_WrL5_atS1, L5Body_CoM, L5_xAx, L5_yAx, rotXFrWr, framesAxisLength);
-		mech.attachFrame(Fr_WrL1_atL2, L2RB);
-		mech.attachFrame(Fr_WrL2_atL3, L3RB);
-		mech.attachFrame(Fr_WrL3_atL4, L4RB);
-		mech.attachFrame(Fr_WrL4_atL5, L5RB);
-		mech.attachFrame(Fr_WrL5_atS1, S1RB);			
+		setFramesPoseInSpace (Fr_WrL1_atL2, L1Body_CoM, L1_xAx, L1_yAx, 
+				rotXFrWr, framesAxisLength);
+		setFramesPoseInSpace (Fr_WrL2_atL3, L2Body_CoM, L2_xAx, L2_yAx, 
+				rotXFrWr, framesAxisLength);
+		setFramesPoseInSpace (Fr_WrL3_atL4, L3Body_CoM, L3_xAx, L3_yAx, 
+				rotXFrWr, framesAxisLength);
+		setFramesPoseInSpace (Fr_WrL4_atL5, L4Body_CoM, L4_xAx, L4_yAx, 
+				rotXFrWr, framesAxisLength);
+		setFramesPoseInSpace (Fr_WrL5_atS1, L5Body_CoM, L5_xAx, L5_yAx,
+				rotXFrWr, framesAxisLength);
+		mech.attachFrame (Fr_WrL1_atL2, L2RB);
+		mech.attachFrame (Fr_WrL2_atL3, L3RB);
+		mech.attachFrame (Fr_WrL3_atL4, L4RB);
+		mech.attachFrame (Fr_WrL4_atL5, L5RB);
+		mech.attachFrame (Fr_WrL5_atS1, S1RB);			
 	}
 
 
@@ -1468,10 +1451,10 @@ public class LSSBase extends RootModel {
 		// Nucleus pulposus (NP) - Yeoh: g10, g20, g30, K; 
 		double[] Y_Np = {0.20*1E6, 0.20*1E6, 6.0E6, 1.80E8};   // [Pa]
 		CubicHyperelastic Mat_Np = new CubicHyperelastic(); 
-		Mat_Np.setG10(Y_Np[0]);
-		Mat_Np.setG20(Y_Np[1]);
-		Mat_Np.setG30(Y_Np[2]);
-		Mat_Np.setBulkModulus(Y_Np[3]);
+		Mat_Np.setG10 (Y_Np[0]);
+		Mat_Np.setG20 (Y_Np[1]);
+		Mat_Np.setG30 (Y_Np[2]);
+		Mat_Np.setBulkModulus (Y_Np[3]);
 		
 		L12Np.setMaterial (Mat_Np);  
 		L23Np.setMaterial (Mat_Np);
@@ -1484,9 +1467,9 @@ public class LSSBase extends RootModel {
 		double v_An    =  0.40;						// [-] Poisson’s ratio
 		MooneyRivlinMaterial Mat_An = new MooneyRivlinMaterial();						
 		MR_An[2] = (1-2*v_An)/(MR_An[0]+MR_An[1]);  // D				
-		Mat_An.setC10(MR_An[0]);
-		Mat_An.setC01(MR_An[1]);
-		Mat_An.setBulkModulus(2/MR_An[2]);  // k = 2/D
+		Mat_An.setC10 (MR_An[0]);
+		Mat_An.setC01 (MR_An[1]);
+		Mat_An.setBulkModulus (2/MR_An[2]);  // k = 2/D
 		
 		L12An.setMaterial (Mat_An);
 		L23An.setMaterial (Mat_An);
@@ -1496,47 +1479,47 @@ public class LSSBase extends RootModel {
 				
 		// Densities 	
 		double NP_dens  = 1.0E3; 	// [kg/m^3] 
-		L12Np.setDensity(NP_dens);
-		L23Np.setDensity(NP_dens);
-		L34Np.setDensity(NP_dens);
-		L45Np.setDensity(NP_dens);
-		L51Np.setDensity(NP_dens);
+		L12Np.setDensity (NP_dens);
+		L23Np.setDensity (NP_dens);
+		L34Np.setDensity (NP_dens);
+		L45Np.setDensity (NP_dens);
+		L51Np.setDensity (NP_dens);
 		
 		double AN_dens  = 1.2E3; 	// [kg/m^3]  
-		L12An.setDensity(AN_dens);
-		L23An.setDensity(AN_dens);
-		L34An.setDensity(AN_dens);
-		L45An.setDensity(AN_dens);
-		L51An.setDensity(AN_dens);
+		L12An.setDensity (AN_dens);
+		L23An.setDensity (AN_dens);
+		L34An.setDensity (AN_dens);
+		L45An.setDensity (AN_dens);
+		L51An.setDensity (AN_dens);
 		
 		// Compressibility settings
 		IncompMethod softIncMNp = IncompMethod.ELEMENT;
-		L12Np.setSoftIncompMethod(softIncMNp);
-		L23Np.setSoftIncompMethod(softIncMNp);
-		L34Np.setSoftIncompMethod(softIncMNp);
-		L45Np.setSoftIncompMethod(softIncMNp);
-		L51Np.setSoftIncompMethod(softIncMNp);
+		L12Np.setSoftIncompMethod (softIncMNp);
+		L23Np.setSoftIncompMethod (softIncMNp);
+		L34Np.setSoftIncompMethod (softIncMNp);
+		L45Np.setSoftIncompMethod (softIncMNp);
+		L51Np.setSoftIncompMethod (softIncMNp);
 		
 		IncompMethod softIncMAn = IncompMethod.ELEMENT;
-		L12An.setSoftIncompMethod(softIncMAn);
-		L23An.setSoftIncompMethod(softIncMAn);
-		L34An.setSoftIncompMethod(softIncMAn);		
-		L45An.setSoftIncompMethod(softIncMAn);
-		L51An.setSoftIncompMethod(softIncMAn);
+		L12An.setSoftIncompMethod (softIncMAn);
+		L23An.setSoftIncompMethod (softIncMAn);
+		L34An.setSoftIncompMethod (softIncMAn);		
+		L45An.setSoftIncompMethod (softIncMAn);
+		L51An.setSoftIncompMethod (softIncMAn);
 			
 		IncompMethod incMNp = IncompMethod.OFF;
-		L12Np.setIncompressible(incMNp);
-		L23Np.setIncompressible(incMNp);
-		L34Np.setIncompressible(incMNp);
-		L45Np.setIncompressible(incMNp);
-		L51Np.setIncompressible(incMNp);
+		L12Np.setIncompressible (incMNp);
+		L23Np.setIncompressible (incMNp);
+		L34Np.setIncompressible (incMNp);
+		L45Np.setIncompressible (incMNp);
+		L51Np.setIncompressible (incMNp);
 		
 		IncompMethod incMAn = IncompMethod.OFF;
-		L12An.setIncompressible(incMAn);
-		L23An.setIncompressible(incMAn);
-		L34An.setIncompressible(incMAn);
-		L45An.setIncompressible(incMAn);
-		L51An.setIncompressible(incMAn);
+		L12An.setIncompressible (incMAn);
+		L23An.setIncompressible (incMAn);
+		L34An.setIncompressible (incMAn);
+		L45An.setIncompressible (incMAn);
+		L51An.setIncompressible (incMAn);
 	}
 
 
@@ -1545,7 +1528,9 @@ public class LSSBase extends RootModel {
 	/**
 	 * Create FE discs (AN & NP) from imported mesh data 
 	 */
-	private void addFEDiscs() {		
+	private void addFEDiscs() {	
+		MyImportFunctions.setFemPathAddition ("/LSS_20200529/");
+		
 		ComponentList<FemModel3d> NPs = 
 				new ComponentList<FemModel3d>(FemModel3d.class, "nucleusFE");
 		ComponentList<FemModel3d> ANs = 
@@ -1585,48 +1570,48 @@ public class LSSBase extends RootModel {
 		L51AnR4 = new FemModel3d ("L51AnR4"); 
 		
 		// Import mesh data in Ansys format - scaled in meter
-		MyImportFunctions.readFromAnsysReader(L12Np,   "L12_Np");
-		MyImportFunctions.readFromAnsysReader(L12An,   "L12_An_R1");
-		MyImportFunctions.readFromAnsysReader(L12AnR1, "L12_An_R1");
-		MyImportFunctions.readFromAnsysReader(L12AnR2, "L12_An_R2");
-		MyImportFunctions.readFromAnsysReader(L12AnR3, "L12_An_R3");
-		MyImportFunctions.readFromAnsysReader(L12AnR4, "L12_An_R4");
+		MyImportFunctions.readFromAnsysReader (L12Np,   "L12_Np");
+		MyImportFunctions.readFromAnsysReader (L12An,   "L12_An_R1");
+		MyImportFunctions.readFromAnsysReader (L12AnR1, "L12_An_R1");
+		MyImportFunctions.readFromAnsysReader (L12AnR2, "L12_An_R2");
+		MyImportFunctions.readFromAnsysReader (L12AnR3, "L12_An_R3");
+		MyImportFunctions.readFromAnsysReader (L12AnR4, "L12_An_R4");
 		
-		MyImportFunctions.readFromAnsysReader(L23Np,   "L23_Np");
-		MyImportFunctions.readFromAnsysReader(L23An,   "L23_An_R1");
-		MyImportFunctions.readFromAnsysReader(L23AnR1, "L23_An_R1");
-		MyImportFunctions.readFromAnsysReader(L23AnR2, "L23_An_R2");
-		MyImportFunctions.readFromAnsysReader(L23AnR3, "L23_An_R3");
-		MyImportFunctions.readFromAnsysReader(L23AnR4, "L23_An_R4");
+		MyImportFunctions.readFromAnsysReader (L23Np,   "L23_Np");
+		MyImportFunctions.readFromAnsysReader (L23An,   "L23_An_R1");
+		MyImportFunctions.readFromAnsysReader (L23AnR1, "L23_An_R1");
+		MyImportFunctions.readFromAnsysReader (L23AnR2, "L23_An_R2");
+		MyImportFunctions.readFromAnsysReader (L23AnR3, "L23_An_R3");
+		MyImportFunctions.readFromAnsysReader (L23AnR4, "L23_An_R4");
 		
-		MyImportFunctions.readFromAnsysReader(L34Np,   "L34_Np");
-		MyImportFunctions.readFromAnsysReader(L34An,   "L34_An_R1");
-		MyImportFunctions.readFromAnsysReader(L34AnR1, "L34_An_R1");
-		MyImportFunctions.readFromAnsysReader(L34AnR2, "L34_An_R2");
-		MyImportFunctions.readFromAnsysReader(L34AnR3, "L34_An_R3");
-		MyImportFunctions.readFromAnsysReader(L34AnR4, "L34_An_R4");
+		MyImportFunctions.readFromAnsysReader (L34Np,   "L34_Np");
+		MyImportFunctions.readFromAnsysReader (L34An,   "L34_An_R1");
+		MyImportFunctions.readFromAnsysReader (L34AnR1, "L34_An_R1");
+		MyImportFunctions.readFromAnsysReader (L34AnR2, "L34_An_R2");
+		MyImportFunctions.readFromAnsysReader (L34AnR3, "L34_An_R3");
+		MyImportFunctions.readFromAnsysReader (L34AnR4, "L34_An_R4");
 		
-		MyImportFunctions.readFromAnsysReader(L45Np,   "L45_Np");
-		MyImportFunctions.readFromAnsysReader(L45An,   "L45_An_R1");
-		MyImportFunctions.readFromAnsysReader(L45AnR1, "L45_An_R1");
-		MyImportFunctions.readFromAnsysReader(L45AnR2, "L45_An_R2");
-		MyImportFunctions.readFromAnsysReader(L45AnR3, "L45_An_R3");
-		MyImportFunctions.readFromAnsysReader(L45AnR4, "L45_An_R4");
+		MyImportFunctions.readFromAnsysReader (L45Np,   "L45_Np");
+		MyImportFunctions.readFromAnsysReader (L45An,   "L45_An_R1");
+		MyImportFunctions.readFromAnsysReader (L45AnR1, "L45_An_R1");
+		MyImportFunctions.readFromAnsysReader (L45AnR2, "L45_An_R2");
+		MyImportFunctions.readFromAnsysReader (L45AnR3, "L45_An_R3");
+		MyImportFunctions.readFromAnsysReader (L45AnR4, "L45_An_R4");
 		
-		MyImportFunctions.readFromAnsysReader(L51Np,   "L51_Np");
-		MyImportFunctions.readFromAnsysReader(L51An,   "L51_An_R1");
-		MyImportFunctions.readFromAnsysReader(L51AnR1, "L51_An_R1");
-		MyImportFunctions.readFromAnsysReader(L51AnR2, "L51_An_R2");
-		MyImportFunctions.readFromAnsysReader(L51AnR3, "L51_An_R3");
-		MyImportFunctions.readFromAnsysReader(L51AnR4, "L51_An_R4");
+		MyImportFunctions.readFromAnsysReader (L51Np,   "L51_Np");
+		MyImportFunctions.readFromAnsysReader (L51An,   "L51_An_R1");
+		MyImportFunctions.readFromAnsysReader (L51AnR1, "L51_An_R1");
+		MyImportFunctions.readFromAnsysReader (L51AnR2, "L51_An_R2");
+		MyImportFunctions.readFromAnsysReader (L51AnR3, "L51_An_R3");
+		MyImportFunctions.readFromAnsysReader (L51AnR4, "L51_An_R4");
 		
 							
 		// For more order store FE disc parts in ComponentLists
-		L12AnR1234 = new ComponentList<FemModel3d> (FemModel3d.class);
-		L23AnR1234 = new ComponentList<FemModel3d> (FemModel3d.class);
-		L34AnR1234 = new ComponentList<FemModel3d> (FemModel3d.class);
-		L45AnR1234 = new ComponentList<FemModel3d> (FemModel3d.class);
-		L51AnR1234 = new ComponentList<FemModel3d> (FemModel3d.class);
+		L12AnR1234 = new ComponentList<FemModel3d>(FemModel3d.class);
+		L23AnR1234 = new ComponentList<FemModel3d>(FemModel3d.class);
+		L34AnR1234 = new ComponentList<FemModel3d>(FemModel3d.class);
+		L45AnR1234 = new ComponentList<FemModel3d>(FemModel3d.class);
+		L51AnR1234 = new ComponentList<FemModel3d>(FemModel3d.class);
 		
 		L12AnR1234.add(L12AnR1);
 		L12AnR1234.add(L12AnR2);
@@ -1671,21 +1656,21 @@ public class LSSBase extends RootModel {
 
 			
 		// Merge multiple FE AN bodies to single AN respectively
-		FemFactory.addFem(L12An, L12AnR2);
-		FemFactory.addFem(L12An, L12AnR3);
-		FemFactory.addFem(L12An, L12AnR4);		
-		FemFactory.addFem(L23An, L23AnR2);
-		FemFactory.addFem(L23An, L23AnR3);
-		FemFactory.addFem(L23An, L23AnR4);	
-		FemFactory.addFem(L34An, L34AnR2);
-		FemFactory.addFem(L34An, L34AnR3);
-		FemFactory.addFem(L34An, L34AnR4);		
-		FemFactory.addFem(L45An, L45AnR2);
-		FemFactory.addFem(L45An, L45AnR3);
-		FemFactory.addFem(L45An, L45AnR4);		
-		FemFactory.addFem(L51An, L51AnR2);
-		FemFactory.addFem(L51An, L51AnR3);
-		FemFactory.addFem(L51An, L51AnR4);
+		FemFactory.addFem (L12An, L12AnR2);
+		FemFactory.addFem (L12An, L12AnR3);
+		FemFactory.addFem (L12An, L12AnR4);		
+		FemFactory.addFem (L23An, L23AnR2);
+		FemFactory.addFem (L23An, L23AnR3);
+		FemFactory.addFem (L23An, L23AnR4);	
+		FemFactory.addFem (L34An, L34AnR2);
+		FemFactory.addFem (L34An, L34AnR3);
+		FemFactory.addFem (L34An, L34AnR4);		
+		FemFactory.addFem (L45An, L45AnR2);
+		FemFactory.addFem (L45An, L45AnR3);
+		FemFactory.addFem (L45An, L45AnR4);		
+		FemFactory.addFem (L51An, L51AnR2);
+		FemFactory.addFem (L51An, L51AnR3);
+		FemFactory.addFem (L51An, L51AnR4);
 		
 		ANs.add(L12An);
 		ANs.add(L23An);
@@ -1722,12 +1707,75 @@ public class LSSBase extends RootModel {
 	
 	
 	/**
-	 * Create the inferior articular facets from imported mesh data
+	 * Create inferior articular FE facets from triangulated surfaces via 
+	 * extrusion. Initial facet gap, facet thickness, and number of wedge 
+	 * element layers is parameterized. 
+	 * To study the effect of varying card angles on the FSU L4/L5 different  
+	 * underlying surfaces and RB may be imported. For more information see 
+	 * e-poster for ISSLS virtual annual meeting 2021. 
 	 */
-	private void addFEFacets(){				
-		ComponentList<ModelComponent> facsFE = 
-				new ComponentList<ModelComponent>(ModelComponent.class, "facetsFE");
+	private void addFEFacets() throws IOException {		
+		PolygonalMesh L12FacL1l_PM, L12FacL1r_PM, L23FacL2l_PM, L23FacL2r_PM, 
+			L34FacL3l_PM, L34FacL3r_PM, L45FacL4l_PM, L45FacL4r_PM, 
+			L51FacL5l_PM, L51FacL5r_PM;
 		
+		// Create file path
+		String currGeomPath = MyImportFunctions.getGeometryDir();
+		String facSubFolder    = "FE/LSS_Facets/";
+		String facCaVarsFolder = "ISSLS21_caVars/";
+		if (cardAngleStudy != true) { 
+			// remove any card angle ID and sub folder when no variation is targeted	
+			facCaVarsFolder = "";
+			cardIDISSLS = "";
+		}
+		
+		
+		// Import surface meshes for the inferior articular facets
+		L12FacL1l_PM = new PolygonalMesh (new File (currGeomPath +
+				 facSubFolder + "L12FacL1l_i" + ".obj")); 	
+		L12FacL1r_PM = new PolygonalMesh (new File (currGeomPath +
+				facSubFolder + "L12FacL1r_i" + ".obj"));
+		L23FacL2l_PM = new PolygonalMesh (new File ( currGeomPath +
+				facSubFolder + "L23FacL2l_i" + ".obj")); 	
+		L23FacL2r_PM = new PolygonalMesh (new File ( currGeomPath +
+				facSubFolder + "L23FacL2r_i" + ".obj"));
+		L34FacL3l_PM = new PolygonalMesh (new File ( currGeomPath +
+				facSubFolder + "L34FacL3l_i" + ".obj")); 	
+		L34FacL3r_PM = new PolygonalMesh (new File ( currGeomPath +
+				facSubFolder + "L34FacL3r_i" + ".obj"));
+		L45FacL4l_PM = new PolygonalMesh (new File ( currGeomPath +
+				facSubFolder + facCaVarsFolder + "L45FacL4l_i" + cardIDISSLS + ".obj")); 	
+		L45FacL4r_PM = new PolygonalMesh (new File ( currGeomPath +
+				facSubFolder + facCaVarsFolder + "L45FacL4r_i" + cardIDISSLS + ".obj"));
+		L51FacL5l_PM = new PolygonalMesh (new File ( currGeomPath +
+				facSubFolder + "L51FacL5l_i" + ".obj")); 	
+		L51FacL5r_PM = new PolygonalMesh (new File ( currGeomPath +
+				facSubFolder + "L51FacL5r_i" + ".obj"));
+		
+		
+		// Translate inferior facet surface mesh for initial facet gap
+		// Assume a resulting vector for translation from all facets normals
+		double initFacGap = 0.5e-3; // [m]
+		translateInfFacetSurface (L12FacL1l_PM, initFacGap,  1);
+		translateInfFacetSurface (L12FacL1r_PM, initFacGap, -1);
+		translateInfFacetSurface (L23FacL2l_PM, initFacGap,  1);
+		translateInfFacetSurface (L23FacL2r_PM, initFacGap, -1);
+		translateInfFacetSurface (L34FacL3l_PM, initFacGap,  1);
+		translateInfFacetSurface (L34FacL3r_PM, initFacGap, -1);
+		translateInfFacetSurface (L45FacL4l_PM, initFacGap,  1);
+		translateInfFacetSurface (L45FacL4r_PM, initFacGap, -1);
+		translateInfFacetSurface (L51FacL5l_PM, initFacGap,  1);
+		translateInfFacetSurface (L51FacL5r_PM, initFacGap, -1);
+
+
+		// -------- Create FE bodies from surface via extrusion ---------------
+		// Create FEM Model from surface via factory extrusion
+		int numLayers = 1; 			// number of element layers
+		double facThickn = 1.5e-3; 	// Thickness of inferior articular facets
+			
+		// Create the inferior articular facets from imported mesh data
+		ComponentList<ModelComponent> facsFE = 
+				new ComponentList<ModelComponent>(ModelComponent.class, "facetsFE");		
 		L12FacL1l = new FemModel3d ("L12FacL1l");  
 		L12FacL1r = new FemModel3d ("L12FacL1r");
 		L23FacL2l = new FemModel3d ("L23FacL2l");  
@@ -1739,45 +1787,76 @@ public class LSSBase extends RootModel {
 		L51FacL5l = new FemModel3d ("L51FacL5l");  
 		L51FacL5r = new FemModel3d ("L51FacL5r");
 		
-		// Import facets from mesh-files in Ansys format [m]
-		MyImportFunctions.readFromAnsysReader (L12FacL1l, "L12_FacL_L1");
-		MyImportFunctions.readFromAnsysReader (L23FacL2l, "L23_FacL_L2");
-		MyImportFunctions.readFromAnsysReader (L34FacL3l, "L34_FacL_L3");
-		MyImportFunctions.readFromAnsysReader (L45FacL4l, "L45_FacL_L4");
-		MyImportFunctions.readFromAnsysReader (L51FacL5l, "L51_FacL_L5");
+		FemFactory.createExtrusion (L12FacL1l, numLayers,  facThickn, 0, L12FacL1l_PM);	
+		FemFactory.createExtrusion (L12FacL1r, numLayers, -facThickn, 0, L12FacL1r_PM);
+		FemFactory.createExtrusion (L23FacL2l, numLayers,  facThickn, 0, L23FacL2l_PM);	
+		FemFactory.createExtrusion (L23FacL2r, numLayers, -facThickn, 0, L23FacL2r_PM);
+		FemFactory.createExtrusion (L34FacL3l, numLayers,  facThickn, 0, L34FacL3l_PM);
+		FemFactory.createExtrusion (L34FacL3r, numLayers, -facThickn, 0, L34FacL3r_PM);
+		FemFactory.createExtrusion (L45FacL4l, numLayers,  facThickn, 0, L45FacL4l_PM);
+		FemFactory.createExtrusion (L45FacL4r, numLayers, -facThickn, 0, L45FacL4r_PM);
+		FemFactory.createExtrusion (L51FacL5l, numLayers,  facThickn, 0, L51FacL5l_PM);
+		FemFactory.createExtrusion (L51FacL5r, numLayers, -facThickn, 0, L51FacL5r_PM);
 		
-		MyImportFunctions.readFromAnsysReader (L12FacL1r, "L12_FacR_L1");
-		MyImportFunctions.readFromAnsysReader (L23FacL2r, "L23_FacR_L2");
-		MyImportFunctions.readFromAnsysReader (L34FacL3r, "L34_FacR_L3");
-		MyImportFunctions.readFromAnsysReader (L45FacL4r, "L45_FacR_L4");
-		MyImportFunctions.readFromAnsysReader (L51FacL5r, "L51_FacR_L5");
+
+		// List of nodes of the facies articularis inferior attache to RB
+		LinkedList<FemNode3d> L12FacL1lrb, L12FacL1rrb, L23FacL2lrb, L23FacL2rrb, 
+			L34FacL3lrb, L34FacL3rrb, L45FacL4lrb, L45FacL4rrb, 
+			L51FacL5lrb, L51FacL5rrb;		
+		// Search for nodes to attach to rigid vertebra - use the initial 
+		// surface to find the nodes that are facing away from the contact side	
+		double searchTol = 1.0e-3;
+		L12FacL1lrb = facNodesToAttach (L12FacL1l, L12FacL1l_PM, searchTol, null);
+		L12FacL1rrb = facNodesToAttach (L12FacL1r, L12FacL1r_PM, searchTol, null);
+		L23FacL2lrb = facNodesToAttach (L23FacL2l, L23FacL2l_PM, searchTol, null);
+		L23FacL2rrb = facNodesToAttach (L23FacL2r, L23FacL2r_PM, searchTol, null);
+		L34FacL3lrb = facNodesToAttach (L34FacL3l, L34FacL3l_PM, searchTol, null);
+		L34FacL3rrb = facNodesToAttach (L34FacL3r, L34FacL3r_PM, searchTol, null);
+		L45FacL4lrb = facNodesToAttach (L45FacL4l, L45FacL4l_PM, searchTol, null);
+		L45FacL4rrb = facNodesToAttach (L45FacL4r, L45FacL4r_PM, searchTol, null);
+		L51FacL5lrb = facNodesToAttach (L51FacL5l, L51FacL5l_PM, searchTol, null);
+		L51FacL5rrb = facNodesToAttach (L51FacL5r, L51FacL5r_PM, searchTol, null);
 		
-		
+
+		// Store all facets in group and add to mech model
+		ComponentList<FemModel3d> L12FacL1, L23FacL2, L34FacL3, L45FacL4, L51FacL5;		
 		L12FacL1 = new ComponentList<FemModel3d> (FemModel3d.class, "L12FacL1");
 		L23FacL2 = new ComponentList<FemModel3d> (FemModel3d.class, "L23FacL2");
 		L34FacL3 = new ComponentList<FemModel3d> (FemModel3d.class, "L34FacL3");
 		L45FacL4 = new ComponentList<FemModel3d> (FemModel3d.class, "L45FacL4");
 		L51FacL5 = new ComponentList<FemModel3d> (FemModel3d.class, "L51FacL5");
 		
-		L12FacL1.add(L12FacL1l);
-		L23FacL2.add(L23FacL2l);
-		L34FacL3.add(L34FacL3l);
-		L45FacL4.add(L45FacL4l);
-		L51FacL5.add(L51FacL5l);
+		L12FacL1.add (L12FacL1l);
+		L23FacL2.add (L23FacL2l);
+		L34FacL3.add (L34FacL3l);
+		L45FacL4.add (L45FacL4l);
+		L51FacL5.add (L51FacL5l);		
+		L12FacL1.add (L12FacL1r);
+		L23FacL2.add (L23FacL2r);
+		L34FacL3.add (L34FacL3r);
+		L45FacL4.add (L45FacL4r);
+		L51FacL5.add (L51FacL5r);
 		
-		L12FacL1.add(L12FacL1r);
-		L23FacL2.add(L23FacL2r);
-		L34FacL3.add(L34FacL3r);
-		L45FacL4.add(L45FacL4r);
-		L51FacL5.add(L51FacL5r);
+		facsFE.add (L12FacL1);
+		facsFE.add (L23FacL2);
+		facsFE.add (L34FacL3);
+		facsFE.add (L45FacL4);
+		facsFE.add (L51FacL5);
+		mech.add (facsFE);
 		
-		facsFE.add(L12FacL1);
-		facsFE.add(L23FacL2);
-		facsFE.add(L34FacL3);
-		facsFE.add(L45FacL4);
-		facsFE.add(L51FacL5);
-		mech.add(facsFE);
 		
+		// Connect FE nodes of facets to RB
+		ConnectFemToRB (L12FacL1lrb, L1RB);
+		ConnectFemToRB (L12FacL1rrb, L1RB);
+		ConnectFemToRB (L23FacL2lrb, L2RB);
+		ConnectFemToRB (L23FacL2rrb, L2RB);
+		ConnectFemToRB (L34FacL3lrb, L3RB);
+		ConnectFemToRB (L34FacL3rrb, L3RB);
+		ConnectFemToRB (L45FacL4lrb, L4RB);
+		ConnectFemToRB (L45FacL4rrb, L4RB);
+		ConnectFemToRB (L51FacL5lrb, L5RB);
+		ConnectFemToRB (L51FacL5rrb, L5RB);
+				
 		// Set render props
 		setFacRenderProps (L12FacL1l);
 		setFacRenderProps (L12FacL1r);
@@ -1840,9 +1919,9 @@ public class LSSBase extends RootModel {
 
 
 	/**
-	 * Add facet joints and set properties
+	 * Add superior articular processes of facet joints and set properties
 	 */
-	private void addFacetJoints() throws IOException {	
+	private void addRBFacets() throws IOException {	
 		ComponentList<RigidBody> FacetsRB = 
 				new ComponentList<RigidBody> (RigidBody.class, "factesRB");
 		L2FacRB = new RigidBody ("L2FacLRB");  
@@ -1850,6 +1929,13 @@ public class LSSBase extends RootModel {
 		L4FacRB = new RigidBody ("L4FacLRB");  
 		L5FacRB = new RigidBody ("L5FacLRB"); 
 		S1FacRB = new RigidBody ("S1FacLRB"); 		
+		
+		// In case of card angle (CA) study set to true to reach sub-folder  
+		// with superior articular processes varied in their CA (ISSLS 2021)
+		String caFolder = "";
+		if (cardAngleStudy == true) {
+			caFolder = "ISSLS21_caVars/";
+		}
 				
 		// Facets - import and add the parts to the main vertebrae RB components
 		PolygonalMesh L2FacLPM, L3FacLPM, L4FacLPM, L5FacLPM, S1FacLPM, 
@@ -1858,13 +1944,13 @@ public class LSSBase extends RootModel {
 		L2FacLPM = MyImportFunctions.addObjMesh ("L2_PDl_a");
 		L3FacLPM = MyImportFunctions.addObjMesh ("L3_PDl_a");
 		L4FacLPM = MyImportFunctions.addObjMesh ("L4_PDl_a");
-		L5FacLPM = MyImportFunctions.addObjMesh ("L5_PDl_a");
+		L5FacLPM = MyImportFunctions.addObjMesh (caFolder + "L5_PDl_a" + cardIDISSLS);
 		S1FacLPM = MyImportFunctions.addObjMesh ("S1_PDl_a");
 		
 		L2FacRPM = MyImportFunctions.addObjMesh ("L2_PDr_a");
 		L3FacRPM = MyImportFunctions.addObjMesh ("L3_PDr_a");
 		L4FacRPM = MyImportFunctions.addObjMesh ("L4_PDr_a");
-		L5FacRPM = MyImportFunctions.addObjMesh ("L5_PDr_a");
+		L5FacRPM = MyImportFunctions.addObjMesh (caFolder + "L5_PDr_a" + cardIDISSLS);
 		S1FacRPM = MyImportFunctions.addObjMesh ("S1_PDr_a");
 			
 		double facMass = 1e-8;
@@ -1917,8 +2003,6 @@ public class LSSBase extends RootModel {
 	private void addAuxBodies() throws IOException {			
 		String auxFolder = "auxGeometries/";		
 
-		//  
-		// 
 		L12_postTriPM = MyImportFunctions.addObjMesh (auxFolder + "L12_postTriangle_100deg");
 		L12_latTriPM  = MyImportFunctions.addObjMesh (auxFolder + "L12_latTriangle_30deg");
 		L23_postTriPM = MyImportFunctions.addObjMesh (auxFolder + "L23_postTriangle_100deg");
@@ -2076,20 +2160,20 @@ public class LSSBase extends RootModel {
 	// sets the FEM's render properties
 	protected void setNpRenderProps (FemModel3d fem) {
 		RenderProps.setLineColor (fem, Color.BLUE);
-		fem.setSurfaceRendering(SurfaceRender.Stress);
+		fem.setSurfaceRendering (SurfaceRender.Stress);
 	}	
 	
 	protected void setAnRenderProps (FemModel3d fem) {
-		fem.setSurfaceRendering(SurfaceRender.Stress);
-	    RenderProps.setLineColor(fem, Color.BLUE);
-		RenderProps.setAlpha(fem, 0.1);
+		fem.setSurfaceRendering (SurfaceRender.Stress);
+	    RenderProps.setLineColor (fem, Color.BLUE);
+		RenderProps.setAlpha (fem, 0.1);
 	}
 	
 	protected void setFacRenderProps (FemModel3d fem) {
-		fem.setSurfaceRendering(SurfaceRender.Shaded);
-	    RenderProps.setLineColor(fem, Color.BLACK);
-	    RenderProps.setFaceColor(fem, new Color (0.3f, 0.3f, 0.3f));
-		RenderProps.setAlpha(fem, 0.8);
+		fem.setSurfaceRendering (SurfaceRender.Shaded);
+	    RenderProps.setLineColor (fem, Color.BLACK);
+	    RenderProps.setFaceColor (fem, new Color (0.3f, 0.3f, 0.3f));
+		RenderProps.setAlpha (fem, 0.8);
 	}
 	
 	
@@ -2097,8 +2181,8 @@ public class LSSBase extends RootModel {
 	protected void RenderNodeSet (LinkedList<FemNode3d> nodes, Color color) {
 		for(int i = 0; i < nodes.size(); i++) {
 			FemNode3d node = nodes.get(i);
-			RenderProps.setAlpha(node, 1);
-			RenderProps.setSphericalPoints(node, 0.0005, color);
+			RenderProps.setAlpha (node, 1);
+			RenderProps.setSphericalPoints (node, 0.0005, color);
 		}
 	}
 	
@@ -2278,9 +2362,9 @@ public class LSSBase extends RootModel {
 		
 		// Render Props
 		if (visible == true) {
-			RenderProps.setPointStyle(myFM, Renderer.PointStyle.POINT);
+			RenderProps.setPointStyle (myFM, Renderer.PointStyle.POINT);
 		    RenderProps.setPointSize (myFM, 8);
-		    RenderProps.setPointColor(myFM, new Color(51,255,204));    
+		    RenderProps.setPointColor (myFM, new Color(51,255,204));    
 		    //FR.setAxisLength(0.03);  // makes the frame visible
 		}
 		return myFM;
@@ -2296,20 +2380,20 @@ public class LSSBase extends RootModel {
 		Fr_Wr.setPosition(Pnt_Loc);  		// set frames position at point Pnt_loc		
 
 		RotationMatrix3d rotXY = new RotationMatrix3d();
-		rotXY.setXYDirections(Vec_xAx.normalize(), Vec_yAx.normalize()); 	
+		rotXY.setXYDirections (Vec_xAx.normalize(), Vec_yAx.normalize()); 	
 		// it might be easier to extract the most anterior and superior points, 
 		// so the y- and z-axis must be 'switched'		
 		rotXY.mulRotX(RotX); 
 		// set frames orientation based on OffsetFrameSprings calculations 
-		Fr_Wr.setOrientation(rotXY.getAxisAngle()); 	
+		Fr_Wr.setOrientation (rotXY.getAxisAngle()); 	
 			
 		Vector3d myMoments = new Vector3d();  // moments about initial axis	
 		Wr.m.set(myMoments);				 // apply rotated moments to frame (=0)
-		Wr.transform(Fr_Wr.getPose().R, Wr);
+		Wr.transform (Fr_Wr.getPose().R, Wr);
 			
-		Fr_Wr.addExternalForce(Wr);			// add wrench as external force to frame
-		Fr_Wr.setAxisLength(AxLngth);    	// make frame visible		
-		mech.addFrame(Fr_Wr);				// add frame to mech model
+		Fr_Wr.addExternalForce (Wr);	// add wrench as external force to frame
+		Fr_Wr.setAxisLength (AxLngth);  // make frame visible		
+		mech.addFrame (Fr_Wr);			// add frame to mech model
 	}
 	
 	
@@ -2385,14 +2469,60 @@ public class LSSBase extends RootModel {
 		myFrame.setName(name);
 		return myFrame;
 	}
+	
+	
+	/**
+	 * Translate inferior facet surface mesh for initial facet gap. 
+	 * Assume a resulting vector for translation from all facets normals
+	 * @param infSurfMesh Polygonal surface meshes for inferior articular facet
+	 * @param initFacGap initial facet gap
+	 * @param direction direction of extrusion 
+	 */
+	private void translateInfFacetSurface (
+			PolygonalMesh infSurfMesh, double initFacGap, int direction) {
+		ArrayList<Vector3d> surfMeshNormals = infSurfMesh.getNormals();
+		Vector3d dirVector = new Vector3d();
+		for (Vector3d v : surfMeshNormals) {
+			dirVector.add(v);
+		}
+		dirVector.normalize();	
+		infSurfMesh.translate(dirVector.scale(initFacGap));
+	}
 
+	
+	/**
+	 * Selecting the nodes of FE joint facets extruded in advance from a 
+	 * triangulated surface mesh. The surface mesh is used to identify the 
+	 * correct nodes, facing away from the contact side.
+	 * 
+	 * @param inferFacFE FE model of the inferior articular facet
+	 * @param inferFacSurface Underlying surface mesh of the inferior articular facet
+	 * @param searchTol Tolerance in relation to the surface within which no nodes are selected 
+	 * @param color set to null if the selected nodes are not to be highlighted
+	 * @return the nodes to be used for an attachment
+	 */
+	private LinkedList<FemNode3d> facNodesToAttach (FemModel3d inferFacFE, 
+			PolygonalMesh inferFacSurface, double searchTol, Color color) {		
+				
+		LinkedList<FemNode3d> selectedNodes = new LinkedList<FemNode3d>();
+		for (FemNode3d n : inferFacFE.getNodes()) {		
+			if (inferFacSurface.distanceToPoint(n.getPosition()) > searchTol) {
+				selectedNodes.add(n);			
+			}
+		}		
+		
+		if (color != null) {
+			RenderNodeSet(selectedNodes, color);
+		}			
+		return selectedNodes;
+	}
 
 	
 	
    
 	// ------------- MATERIAL PROPERTIES ------------------	
 	// Set the Collagen Fiber (CF) material properties	
-	protected void createCF_MP(	CollFiberData_MP CFData, 
+	protected void createCF_MP (CollFiberData_MP CFData, 
 			RenderableComponentList<MultiPointSpring> CF_RCL, 
 			FemModel3d fem, FemModel3d MeshedRBIntersPost, FemModel3d MeshedRBIntersLat, 
 			double CF_r, double CFVolFrac, String[] myMapNames) throws IOException 
@@ -2539,7 +2669,7 @@ public class LSSBase extends RootModel {
 	// ------------------------------------------------------------------------
 	// Make background white by default and set viewers eye
 	@Override
-    public void attach(DriverInterface driver) {
+    public void attach (DriverInterface driver) {
        super.attach (driver);      
        GLViewer viewer = driver.getViewerManager().getViewer(0); 
        if (viewer != null) {
