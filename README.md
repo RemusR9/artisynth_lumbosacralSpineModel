@@ -2,7 +2,7 @@
 
 This repositry holds a calibrated and validated model of a passive lumbosacral spine based on the data of the [Male Visible Human Project](https://www.nlm.nih.gov/research/visible/visible_human.html). The model is built with the freely available 3D modeling platform [ArtiSynth](https://www.artisynth.org) that supports the combined simulation of multibody and finite element models, together with contact and constraints. As part of an active hybrid model of the human trunk which includes muscles and inverse dynamics, we are continuously improving this model and are open to suggestions for improvements and new potential applications.  
 
-If you use the model or parts of it in your research, please cite the following reference: 
+If you use the model or parts of it in your research, please cite the following reference:  
 Remus R, Lipphaus A, Neumann M, Bender B (2021) Calibration and validation of a novel hybrid model of the lumbosacral spine in ArtiSynth–The passive structures. PLoS ONE 16(4): e0250456. [https://doi.org/10.1371/journal.pone.0250456](https://doi.org/10.1371/journal.pone.0250456)
 
 
