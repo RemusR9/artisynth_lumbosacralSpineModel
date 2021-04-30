@@ -138,13 +138,16 @@ public class LSSBase extends RootModel {
 	
 	//--------------------------------------------------------------------------
 	// Select different card angle (CA) variations via names for ISSLS 2021 
-	// sensitivity study of L4/L5 facet joints.
-	// However, CAX* is to be understood here for all CAX. (CAX = 90° - CAX*)
-	// "CAX0" or "" is the default card set used for calibration and validation 
+	// sensitivity study of L4/L5 facet joints. 
+	// Note the coordinate system changed in the model, which is why CAX should 
+	// actually be named CAY and CAY should actually be named CAZ. Here, however, 
+	// the designation according to Panjabi et al. 1993 is chosen.  
+	// Also, CAX* is to be understood for all CAX (CAX = 90° - CAX*).
+	// "_CAX0" or "" is the default card set used for calibration and validation 
 	// in Remus et al. (2021), PloS ONE, 10.1371/journal.pone.0250456.
 	// For example "...p5" stands for "...+5°" and "...m5" for "...-5°"
 	boolean cardAngleStudy = false;  // for ISSLS21 study set to true
-	String cardIDISSLS = "_CAX0"; // e.g. "_CAXp5", "_CAYm2", etc.
+	String cardIDISSLS = ""; // e.g. for ISSLS21 study: "_CAX0", "_CAXp5", "_CAYm2", etc.
 	//--------------------------------------------------------------------------
 	
 	
