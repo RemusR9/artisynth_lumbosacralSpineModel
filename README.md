@@ -1,9 +1,12 @@
-# Hybrid lumbosacral spine model build in ArtiSynth [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4453702.svg)](https://doi.org/10.5281/zenodo.4453702) [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+# Hybrid lumbosacral spine model build in ArtiSynth [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4453702.svg)](https://doi.org/10.5281/zenodo.4453702) [![License](https://img.shields.io/badge/License-BSD%203--Clause-green.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
 This repositry holds a calibrated and validated model of a passive lumbosacral spine based on the data of the [Male Visible Human Project](https://www.nlm.nih.gov/research/visible/visible_human.html). The model is built with the freely available 3D modeling platform [ArtiSynth](https://www.artisynth.org) that supports the combined simulation of multibody and finite element models, together with contact and constraints. As part of an active hybrid model of the human trunk which includes muscles and inverse dynamics, we are continuously improving this model and are open to suggestions for improvements and new potential applications.  
 
 If you use the model or parts of it in your research, please cite the following reference:  
 > Remus R, Lipphaus A, Neumann M, Bender B (2021) Calibration and validation of a novel hybrid model of the lumbosacral spine in ArtiSynth–The passive structures. PLoS ONE 16(4): e0250456. [https://doi.org/10.1371/journal.pone.0250456](https://doi.org/10.1371/journal.pone.0250456)
+ 
+![General model overwiev](LSS_Model_overview.PNG)
+
 
 ## What this repository includes
 * The Java code to build the model. Due to continuous further development, the most current status is always available here. The published intermediate states are freezed under [Relaeses](https://github.com/RemusR9/artisynth_lumbosacralSpineModel/releases).
