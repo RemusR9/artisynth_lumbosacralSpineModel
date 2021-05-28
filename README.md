@@ -32,4 +32,4 @@ Combined loading modes are used in the following video sequence to move the lumb
 
 
 ## License
-This source code is licensed under the BSD-3-Clause license found in the [LICENSE file](LICENSE.md) in the root directory of this source tree. 
+This source code is licensed under the BSD-3-Clause license found in the [LICENSE file](LICENSE) in the root directory of this source tree. 
