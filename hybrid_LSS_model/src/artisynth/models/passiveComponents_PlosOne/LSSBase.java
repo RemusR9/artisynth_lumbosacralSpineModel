@@ -142,10 +142,10 @@ public class LSSBase extends RootModel {
 	// Note the coordinate system changed in the model, which is why CAX should 
 	// actually be named CAY and CAY should actually be named CAZ. Here, however, 
 	// the designation according to Panjabi et al. 1993 is chosen.  
-	// Also, CAX* is to be understood for all CAX (CAX = 90∞ - CAX*).
+	// Also, CAX* is to be understood for all CAX (CAX = 90deg - CAX*).
 	// "_CAX0" or "" is the default card set used for calibration and validation 
 	// in Remus et al. (2021), PloS ONE, 10.1371/journal.pone.0250456.
-	// For example "...p5" stands for "...+5∞" and "...m5" for "...-5∞"
+	// For example "...p5" stands for "...+5deg" and "...m5" for "...-5deg"
 	boolean cardAngleStudy = false;  // for ISSLS21 study set to true
 	String cardIDISSLS = ""; // e.g. for ISSLS21 study: "_CAX0", "_CAXp5", "_CAYm2", etc.
 	//--------------------------------------------------------------------------
@@ -976,7 +976,7 @@ public class LSSBase extends RootModel {
 	 * Create FE to FE attachments
 	 */
 	private void addAttachments_FEFE() {	
-		// For Np to An: always get the nodes from the outer set (a = auﬂen)
+		// For Np to An: always get the nodes from the outer set (a = aussen)
 		//  and connect to closest element/node		
 		for (FemNode3d n : L12Npa_ou) 		
 			mech.attachPoint(n, L12An);
