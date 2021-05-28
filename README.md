@@ -28,7 +28,6 @@ Combined loading modes are used in the following video sequence to move the lumb
 
 ## Some tips for using the model
 - Always ramp external forces and moments (increase their amplitude evenly distributed over several time steps) to prevent inverted elements in the FE discs. This can be done manually by increasing the numbers and moving the sliders in the simulation control window or automatically by using an input probe - what I would recommend. 
-- ...
 - More info will follow here soon ...
 
 
