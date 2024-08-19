@@ -6,9 +6,9 @@
  * 
  * If you use the model for your research cite the following reference:
  * 
- * Remus R, Lipphaus A, Neumann M, Bender B. "Calibration and validation of a 
- * novel hybrid model of the lumbosacral spine in ArtiSynth – The passive 
- * structures", PLOS ONE (accepted), 2021
+ * Remus R, Lipphaus A, Neumann M, Bender B (2021) Calibration and validation of a 
+ * novel hybrid model of the lumbosacral spine in ArtiSynthâ€“The passive structures. 
+ * PLoS ONE 16(4): e0250456. https://doi.org/10.1371/journal.pone.0250456 
  */
 package artisynth.models.passiveComponents_PlosOne;
 
@@ -30,10 +30,10 @@ import artisynth.core.femmodels.FemModel.SurfaceRender;
 import artisynth.core.femmodels.FemModel3d;
 import artisynth.core.femmodels.FemNode3d;
 import artisynth.core.gui.ControlPanel;
-import artisynth.core.materials.CubicHyperelastic;
 import artisynth.core.materials.MooneyRivlinMaterial;
 import artisynth.core.materials.NeoHookeanMaterial;
 import artisynth.core.materials.SimpleAxialMuscle;
+import artisynth.core.materials.YeohMaterial;
 import artisynth.core.mechmodels.AxialSpring;
 import artisynth.core.mechmodels.Collidable.Collidability;
 import artisynth.core.mechmodels.CollisionBehavior;
@@ -42,6 +42,7 @@ import artisynth.core.mechmodels.CollisionResponse;
 import artisynth.core.mechmodels.Frame;
 import artisynth.core.mechmodels.FrameMarker;
 import artisynth.core.mechmodels.MechModel;
+import artisynth.core.mechmodels.MechSystemSolver;
 import artisynth.core.mechmodels.MechSystemSolver.Integrator;
 import artisynth.core.mechmodels.MultiPointMuscle;
 import artisynth.core.mechmodels.MultiPointSpring;
@@ -165,7 +166,8 @@ public class LSSBase extends RootModel {
 		mech = new MechModel ("mech"); 
 		addModel (mech);
 		
-		mech.setIntegrator (Integrator.ConstrainedBackwardEuler); 
+		mech.setIntegrator (Integrator.ConstrainedBackwardEuler);
+		MechSystemSolver.setHybridSolvesEnabled (false);
 		mech.setMaxStepSize (0.01);
 		mech.setProfiling (false);
 		mech.setGravity (gavityVec);
@@ -209,7 +211,8 @@ public class LSSBase extends RootModel {
 		mech.remove (L45AnR1234);
 		mech.remove (L51AnR1234);		
 	              
-		addMyControlPanel();     		
+		addMyControlPanel();
+		
 	}	
 	
 
@@ -741,59 +744,59 @@ public class LSSBase extends RootModel {
 		
 		// set the render properties of the CF RenderableComponentLists  	// good value for radius 0.00011
 		double CF_ScaleR = 1;  // Scales the "real" radius of the CFs by reduceR
-		RenderProps.setCylindricalLines(CF_L12R1i, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L12R1i, Math.sqrt (
 				CF_L12AnR1i.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.95f, 0.95f, 0.2f));
-		RenderProps.setCylindricalLines(CF_L12R1a, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L12R1a, Math.sqrt (
 				CF_L12AnR1a.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.90f, 0.75f, 0.2f));
-		RenderProps.setCylindricalLines(CF_L12R2a, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L12R2a, Math.sqrt (
 				CF_L12AnR2a.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.85f, 0.60f, 0.2f));
-		RenderProps.setCylindricalLines(CF_L12R3a, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L12R3a, Math.sqrt (
 				CF_L12AnR3a.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.80f, 0.45f, 0.2f));
-		RenderProps.setCylindricalLines(CF_L12R4a, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L12R4a, Math.sqrt (
 				CF_L12AnR4a.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.80f, 0.45f, 0.2f));
 		
-		RenderProps.setCylindricalLines(CF_L23R1i, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L23R1i, Math.sqrt (
 				CF_L23AnR1i.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.95f, 0.95f, 0.2f));
-		RenderProps.setCylindricalLines(CF_L23R1a, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L23R1a, Math.sqrt (
 				CF_L23AnR1a.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.90f, 0.75f, 0.2f));
-		RenderProps.setCylindricalLines(CF_L23R2a, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L23R2a, Math.sqrt (
 				CF_L23AnR2a.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.85f, 0.60f, 0.2f));
-		RenderProps.setCylindricalLines(CF_L23R3a, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L23R3a, Math.sqrt (
 				CF_L23AnR3a.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.80f, 0.45f, 0.2f));
-		RenderProps.setCylindricalLines(CF_L23R4a, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L23R4a, Math.sqrt (
 				CF_L23AnR4a.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.80f, 0.45f, 0.2f));
 		
-		RenderProps.setCylindricalLines(CF_L34R1i, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L34R1i, Math.sqrt (
 				CF_L34AnR1i.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.95f, 0.95f, 0.2f));
-		RenderProps.setCylindricalLines(CF_L34R1a, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L34R1a, Math.sqrt (
 				CF_L34AnR1a.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.90f, 0.75f, 0.2f));
-		RenderProps.setCylindricalLines(CF_L34R2a, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L34R2a, Math.sqrt (
 				CF_L34AnR2a.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.85f, 0.60f, 0.2f));
-		RenderProps.setCylindricalLines(CF_L34R3a, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L34R3a, Math.sqrt (
 				CF_L34AnR3a.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.80f, 0.45f, 0.2f));
-		RenderProps.setCylindricalLines(CF_L34R4a, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L34R4a, Math.sqrt (
 				CF_L34AnR4a.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.80f, 0.45f, 0.2f));
 
-		RenderProps.setCylindricalLines(CF_L34R1i, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L45R1i, Math.sqrt (
 				CF_L45AnR1i.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.95f, 0.95f, 0.2f));
-		RenderProps.setCylindricalLines(CF_L34R1a, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L45R1a, Math.sqrt (
 				CF_L45AnR1a.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.90f, 0.75f, 0.2f));
-		RenderProps.setCylindricalLines(CF_L34R2a, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L45R2a, Math.sqrt (
 				CF_L45AnR2a.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.85f, 0.60f, 0.2f));
-		RenderProps.setCylindricalLines(CF_L34R3a, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L45R3a, Math.sqrt (
 				CF_L45AnR3a.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.80f, 0.45f, 0.2f));
-		RenderProps.setCylindricalLines(CF_L34R4a, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L45R4a, Math.sqrt (
 				CF_L45AnR4a.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.80f, 0.45f, 0.2f));
 		
-		RenderProps.setCylindricalLines(CF_L51R1i, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L51R1i, Math.sqrt (
 				CF_L51AnR1i.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.95f, 0.95f, 0.2f));
-		RenderProps.setCylindricalLines(CF_L51R1a, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L51R1a, Math.sqrt (
 				CF_L51AnR1a.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.90f, 0.75f, 0.2f));
-		RenderProps.setCylindricalLines(CF_L51R2a, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L51R2a, Math.sqrt (
 				CF_L51AnR2a.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.85f, 0.60f, 0.2f));
-		RenderProps.setCylindricalLines(CF_L51R3a, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L51R3a, Math.sqrt (
 				CF_L51AnR3a.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.80f, 0.45f, 0.2f));
-		RenderProps.setCylindricalLines(CF_L51R4a, Math.sqrt (
+		RenderProps.setCylindricalLines (CF_L51R4a, Math.sqrt (
 				CF_L51AnR4a.CFCrossSec/Math.PI)*CF_ScaleR, new Color(0.80f, 0.45f, 0.2f));
 		
 		CFs.add(CF_L12);
@@ -1252,7 +1255,7 @@ public class LSSBase extends RootModel {
 	 * Create and add a control panel to change external loads
 	 */
 	private void addMyControlPanel() {
-		ControlPanel myPanel = new ControlPanel("Simulation Controls");
+		ControlPanel myPanel = new ControlPanel("Manual Simulation Controls");
 
 		myPanel.addWidget(new JLabel("External Loads:"));
 		myPanel.addWidget("Wrench L1", Fr_WrL1, "externalForce");
@@ -1451,12 +1454,13 @@ public class LSSBase extends RootModel {
 	 * Set intervertebral discs (AN & NP) material properties
 	 */
 	private void setFEDiscMaterials() {		
-		// Nucleus pulposus (NP) - Yeoh: g10, g20, g30, K; 
+		// Nucleus pulposus (NP) - Yeoh Material, formerly 
+		// CubicHyperelastic Material: g10, g20, g30, K; 
 		double[] Y_Np = {0.20*1E6, 0.20*1E6, 6.0E6, 1.80E8};   // [Pa]
-		CubicHyperelastic Mat_Np = new CubicHyperelastic(); 
-		Mat_Np.setG10 (Y_Np[0]);
-		Mat_Np.setG20 (Y_Np[1]);
-		Mat_Np.setG30 (Y_Np[2]);
+		YeohMaterial Mat_Np = new YeohMaterial(); 
+		Mat_Np.setC1 (Y_Np[0]);
+		Mat_Np.setC2 (Y_Np[1]);
+		Mat_Np.setC3 (Y_Np[2]);
 		Mat_Np.setBulkModulus (Y_Np[3]);
 		
 		L12Np.setMaterial (Mat_Np);  
@@ -1467,7 +1471,7 @@ public class LSSBase extends RootModel {
 						
 		// Anulus ground substance (AN resp. AGS) - Mooney-Rivlin
 		double[] MR_An = {0.18*1E6, 0.045*1E6, 0}; 	// c01, c10 [Pa]		 	     	
-		double v_An    =  0.40;						// [-] Poisson’s ratio
+		double v_An    =  0.40;						// [-] Poissons ratio
 		MooneyRivlinMaterial Mat_An = new MooneyRivlinMaterial();						
 		MR_An[2] = (1-2*v_An)/(MR_An[0]+MR_An[1]);  // D				
 		Mat_An.setC10 (MR_An[0]);
@@ -2052,6 +2056,7 @@ public class LSSBase extends RootModel {
 		L1BodyPM = MyImportFunctions.addObjMesh ("L1_body");	
 		L1BodyPM.setName("L1body");
 		L1GesPM  = MyImportFunctions.addObjMesh ("L1_Schrumpfverpacken");
+		L1GesPM.setName ("L1 Surface Mesh");
 		L1RB.addMesh (L1BodyPM, /*hasMass*/ false, /*isCollidable*/false);
 		L1GesRMC = L1RB.addMesh (L1GesPM,  /*hasMass*/ true,  /*isCollidable*/false);
 		L1BodyRB.addMesh (L1BodyPM, /*hasMass*/ true,  /*isCollidable*/false);
@@ -2059,6 +2064,7 @@ public class LSSBase extends RootModel {
 		L2BodyPM = MyImportFunctions.addObjMesh ("L2_body");
 		L2BodyPM.setName("L2body");
 		L2GesPM  = MyImportFunctions.addObjMesh ("L2_Schrumpfverpacken");
+		L2GesPM.setName ("L2 Surface Mesh");
 		L2RB.addMesh (L2BodyPM, false, false);
 		L2GesRMC = L2RB.addMesh (L2GesPM, true, false);
 		L2BodyRB.addMesh (L2BodyPM, true, false);		
@@ -2066,6 +2072,7 @@ public class LSSBase extends RootModel {
 		L3BodyPM = MyImportFunctions.addObjMesh ("L3_body");
 		L3BodyPM.setName("L3body");
 		L3GesPM  = MyImportFunctions.addObjMesh ("L3_Schrumpfverpacken");
+		L3GesPM.setName ("L3 Surface Mesh");
 		L3RB.addMesh (L3BodyPM, false, false);
 		L3GesRMC = L3RB.addMesh (L3GesPM, true,  false);
 		L3BodyRB.addMesh (L3BodyPM, true, false);
@@ -2073,6 +2080,7 @@ public class LSSBase extends RootModel {
 		L4BodyPM = MyImportFunctions.addObjMesh ("L4_body");
 		L4BodyPM.setName("L4body");
 		L4GesPM  = MyImportFunctions.addObjMesh ("L4_Schrumpfverpacken");
+		L4GesPM.setName ("L4 Surface Mesh");
 		L4RB.addMesh (L4BodyPM, false, false);
 		L4GesRMC = L4RB.addMesh (L4GesPM, true, false);
 		L4BodyRB.addMesh (L4BodyPM, true, false);
@@ -2080,6 +2088,7 @@ public class LSSBase extends RootModel {
 		L5BodyPM = MyImportFunctions.addObjMesh ("L5_body");
 		L5BodyPM.setName("L5body");
 		L5GesPM  = MyImportFunctions.addObjMesh ("L5_Schrumpfverpacken");
+		L5GesPM.setName ("L5 Surface Mesh");
 		L5RB.addMesh (L5BodyPM, false, false);
 		L5GesRMC = L5RB.addMesh (L5GesPM, true, false);
 		L5BodyRB.addMesh (L5BodyPM, true, false); 		
@@ -2087,6 +2096,7 @@ public class LSSBase extends RootModel {
 		S1BodyPM = MyImportFunctions.addObjMesh ("S1_body");
 		S1BodyPM.setName("S1body");
 		S1GesPM  = MyImportFunctions.addObjMesh ("S1_Schrumpfverpacken");
+		S1GesPM.setName ("S1 Surface Mesh");
 		S1RB.addMesh(S1BodyPM, false, false);
 		S1GesRMC  = S1RB.addMesh (S1GesPM,  true, false);
 		S1BodyRB.addMesh (S1BodyPM, true, false);  
