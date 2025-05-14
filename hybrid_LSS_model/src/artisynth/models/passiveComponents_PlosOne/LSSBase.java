@@ -1930,7 +1930,7 @@ public class LSSBase extends RootModel {
 	 */
 	private void addRBFacets() throws IOException {	
 		ComponentList<RigidBody> FacetsRB = 
-				new ComponentList<RigidBody> (RigidBody.class, "factesRB");
+				new ComponentList<RigidBody> (RigidBody.class, "facetsRB");
 		L2FacRB = new RigidBody ("L2FacLRB");  
 		L3FacRB = new RigidBody ("L3FacLRB");  
 		L4FacRB = new RigidBody ("L4FacLRB");  

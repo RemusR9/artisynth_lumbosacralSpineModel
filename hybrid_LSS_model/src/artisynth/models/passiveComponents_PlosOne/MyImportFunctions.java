@@ -90,6 +90,7 @@ public class MyImportFunctions {
    public static PolygonalMesh addObjMesh (String name) throws IOException {
 	   PolygonalMesh mesh = 
 			   new PolygonalMesh (new File (geometryDir + "RB/" + name + ".obj"));
+	   mesh.setName(name);
 	   return mesh;
    	}
 	
@@ -292,10 +293,10 @@ public class MyImportFunctions {
 			   readerM.close();
 		   }
 		   else {
-			   System.out.println("Die Anzahlen der übergebenen Ligamente (" 
-					   + Double.parseDouble(lineD) + ") stimmt nicht mit der "
-					   + "Anzahl der eingelesenen Materialdaten für Ligamente (" 
-					   + Double.parseDouble(lineM)+ ") überein!");
+			   System.out.println("The number of ligaments passed (" 
+					   + Double.parseDouble(lineD) + ") does not match the number "
+					   + "of material data read in for ligaments (" 
+					   + Double.parseDouble(lineM)+ ")!");
 		   }		      
 	   } 
 	   catch(IOException e){
@@ -429,11 +430,10 @@ public class MyImportFunctions {
 			   readerM.close();
 		   }
 		   else {
-			   System.out.println("Die Anzahlen der übergebenen MP Ligamente (" 
-					   + Double.parseDouble(lineD) + 
-					   ") stimmt nicht mit der Anzahl der eingelesenen "
-					   + "Materialdaten für MP Ligamente (" + 
-					   Double.parseDouble(lineM)+ ") überein!");
+			   System.out.println("The number of ligaments passed (" 
+					   + Double.parseDouble(lineD) + ") does not match the number "
+					   + "of material data read in for ligaments (" 
+					   + Double.parseDouble(lineM)+ ")!");
 		   }		      
 	   } 
 	   catch(IOException e){
@@ -753,7 +753,6 @@ public class MyImportFunctions {
 		public Double getCFVolFrac(){
 			return CFVolFrac;
 		}
-
 	}
 
 }
