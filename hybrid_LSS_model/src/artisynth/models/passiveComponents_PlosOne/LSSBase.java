@@ -4,7 +4,7 @@
  * This software is freely available under a 3-clause BSD license. Please see
  * the LICENSE file in the GitHub distribution directory for details.
  * 
- * If you use the model for your research cite the following reference:
+ * If you use the model for your research please cite the following reference:
  * 
  * Remus R, Lipphaus A, Neumann M, Bender B (2021) Calibration and validation of a 
  * novel hybrid model of the lumbosacral spine in ArtiSynth–The passive structures. 
@@ -211,8 +211,7 @@ public class LSSBase extends RootModel {
 		mech.remove (L45AnR1234);
 		mech.remove (L51AnR1234);		
 	              
-		addMyControlPanel();
-		
+		addMyControlPanel();	
 	}	
 	
 
@@ -513,39 +512,39 @@ public class LSSBase extends RootModel {
 		
 		// Import data about collagen fiber positions from text file (.fiber)		
 		CollFiberData_MP CF_L12AnR1i, CF_L12AnR1a, CF_L12AnR2a, CF_L12AnR3a, CF_L12AnR4a;
-		CF_L12AnR1i = MyImportFunctions.ImportCollFibersMP ("L12_An_R1i", L12AnR1);
-		CF_L12AnR1a = MyImportFunctions.ImportCollFibersMP ("L12_An_R1a", L12AnR1);
-		CF_L12AnR2a = MyImportFunctions.ImportCollFibersMP ("L12_An_R2a", L12AnR2);
-		CF_L12AnR3a = MyImportFunctions.ImportCollFibersMP ("L12_An_R3a", L12AnR3);
-		CF_L12AnR4a = MyImportFunctions.ImportCollFibersMP ("L12_An_R4a", L12AnR4);
+		CF_L12AnR1i = MyImportFunctions.ImportCollFibersMP ("L12_AN_R1i", L12AnR1);
+		CF_L12AnR1a = MyImportFunctions.ImportCollFibersMP ("L12_AN_R1a", L12AnR1);
+		CF_L12AnR2a = MyImportFunctions.ImportCollFibersMP ("L12_AN_R2a", L12AnR2);
+		CF_L12AnR3a = MyImportFunctions.ImportCollFibersMP ("L12_AN_R3a", L12AnR3);
+		CF_L12AnR4a = MyImportFunctions.ImportCollFibersMP ("L12_AN_R4a", L12AnR4);
 		
 		CollFiberData_MP CF_L23AnR1i, CF_L23AnR1a, CF_L23AnR2a, CF_L23AnR3a, CF_L23AnR4a;
-		CF_L23AnR1i = MyImportFunctions.ImportCollFibersMP ("L23_An_R1i", L23AnR1);
-		CF_L23AnR1a = MyImportFunctions.ImportCollFibersMP ("L23_An_R1a", L23AnR1);
-		CF_L23AnR2a = MyImportFunctions.ImportCollFibersMP ("L23_An_R2a", L23AnR2);
-		CF_L23AnR3a = MyImportFunctions.ImportCollFibersMP ("L23_An_R3a", L23AnR3);
-		CF_L23AnR4a = MyImportFunctions.ImportCollFibersMP ("L23_An_R4a", L23AnR4);
+		CF_L23AnR1i = MyImportFunctions.ImportCollFibersMP ("L23_AN_R1i", L23AnR1);
+		CF_L23AnR1a = MyImportFunctions.ImportCollFibersMP ("L23_AN_R1a", L23AnR1);
+		CF_L23AnR2a = MyImportFunctions.ImportCollFibersMP ("L23_AN_R2a", L23AnR2);
+		CF_L23AnR3a = MyImportFunctions.ImportCollFibersMP ("L23_AN_R3a", L23AnR3);
+		CF_L23AnR4a = MyImportFunctions.ImportCollFibersMP ("L23_AN_R4a", L23AnR4);
 		
 		CollFiberData_MP CF_L34AnR1i, CF_L34AnR1a, CF_L34AnR2a, CF_L34AnR3a, CF_L34AnR4a;
-		CF_L34AnR1i = MyImportFunctions.ImportCollFibersMP ("L34_An_R1i", L34AnR1);
-		CF_L34AnR1a = MyImportFunctions.ImportCollFibersMP ("L34_An_R1a", L34AnR1);
-		CF_L34AnR2a = MyImportFunctions.ImportCollFibersMP ("L34_An_R2a", L34AnR2);
-		CF_L34AnR3a = MyImportFunctions.ImportCollFibersMP ("L34_An_R3a", L34AnR3);
-		CF_L34AnR4a = MyImportFunctions.ImportCollFibersMP ("L34_An_R4a", L34AnR4);
+		CF_L34AnR1i = MyImportFunctions.ImportCollFibersMP ("L34_AN_R1i", L34AnR1);
+		CF_L34AnR1a = MyImportFunctions.ImportCollFibersMP ("L34_AN_R1a", L34AnR1);
+		CF_L34AnR2a = MyImportFunctions.ImportCollFibersMP ("L34_AN_R2a", L34AnR2);
+		CF_L34AnR3a = MyImportFunctions.ImportCollFibersMP ("L34_AN_R3a", L34AnR3);
+		CF_L34AnR4a = MyImportFunctions.ImportCollFibersMP ("L34_AN_R4a", L34AnR4);
 		
 		CollFiberData_MP CF_L45AnR1i, CF_L45AnR1a, CF_L45AnR2a, CF_L45AnR3a, CF_L45AnR4a;
-		CF_L45AnR1i = MyImportFunctions.ImportCollFibersMP ("L45_An_R1i", L45AnR1);
-		CF_L45AnR1a = MyImportFunctions.ImportCollFibersMP ("L45_An_R1a", L45AnR1);
-		CF_L45AnR2a = MyImportFunctions.ImportCollFibersMP ("L45_An_R2a", L45AnR2);
-		CF_L45AnR3a = MyImportFunctions.ImportCollFibersMP ("L45_An_R3a", L45AnR3);
-		CF_L45AnR4a = MyImportFunctions.ImportCollFibersMP ("L45_An_R4a", L45AnR4);
+		CF_L45AnR1i = MyImportFunctions.ImportCollFibersMP ("L45_AN_R1i", L45AnR1);
+		CF_L45AnR1a = MyImportFunctions.ImportCollFibersMP ("L45_AN_R1a", L45AnR1);
+		CF_L45AnR2a = MyImportFunctions.ImportCollFibersMP ("L45_AN_R2a", L45AnR2);
+		CF_L45AnR3a = MyImportFunctions.ImportCollFibersMP ("L45_AN_R3a", L45AnR3);
+		CF_L45AnR4a = MyImportFunctions.ImportCollFibersMP ("L45_AN_R4a", L45AnR4);
 		
 		CollFiberData_MP CF_L51AnR1i, CF_L51AnR1a, CF_L51AnR2a, CF_L51AnR3a, CF_L51AnR4a;
-		CF_L51AnR1i = MyImportFunctions.ImportCollFibersMP ("L51_An_R1i", L51AnR1);
-		CF_L51AnR1a = MyImportFunctions.ImportCollFibersMP ("L51_An_R1a", L51AnR1);
-		CF_L51AnR2a = MyImportFunctions.ImportCollFibersMP ("L51_An_R2a", L51AnR2);
-		CF_L51AnR3a = MyImportFunctions.ImportCollFibersMP ("L51_An_R3a", L51AnR3);
-		CF_L51AnR4a = MyImportFunctions.ImportCollFibersMP ("L51_An_R4a", L51AnR4);
+		CF_L51AnR1i = MyImportFunctions.ImportCollFibersMP ("L51_AN_R1i", L51AnR1);
+		CF_L51AnR1a = MyImportFunctions.ImportCollFibersMP ("L51_AN_R1a", L51AnR1);
+		CF_L51AnR2a = MyImportFunctions.ImportCollFibersMP ("L51_AN_R2a", L51AnR2);
+		CF_L51AnR3a = MyImportFunctions.ImportCollFibersMP ("L51_AN_R3a", L51AnR3);
+		CF_L51AnR4a = MyImportFunctions.ImportCollFibersMP ("L51_AN_R4a", L51AnR4);
 		
 		// Import and mesh RB (triangle) to define different areas of disc
 		// Create the meshs automatically from RB to be able to search for 
@@ -1577,40 +1576,40 @@ public class LSSBase extends RootModel {
 		L51AnR4 = new FemModel3d ("L51AnR4"); 
 		
 		// Import mesh data in Ansys format - scaled in meter
-		MyImportFunctions.readFromAnsysReader (L12Np,   "L12_Np");
-		MyImportFunctions.readFromAnsysReader (L12An,   "L12_An_R1");
-		MyImportFunctions.readFromAnsysReader (L12AnR1, "L12_An_R1");
-		MyImportFunctions.readFromAnsysReader (L12AnR2, "L12_An_R2");
-		MyImportFunctions.readFromAnsysReader (L12AnR3, "L12_An_R3");
-		MyImportFunctions.readFromAnsysReader (L12AnR4, "L12_An_R4");
+		MyImportFunctions.readFromAnsysReader (L12Np,   "L12_NP");
+		MyImportFunctions.readFromAnsysReader (L12An,   "L12_AN_R1");
+		MyImportFunctions.readFromAnsysReader (L12AnR1, "L12_AN_R1");
+		MyImportFunctions.readFromAnsysReader (L12AnR2, "L12_AN_R2");
+		MyImportFunctions.readFromAnsysReader (L12AnR3, "L12_AN_R3");
+		MyImportFunctions.readFromAnsysReader (L12AnR4, "L12_AN_R4");
 		
-		MyImportFunctions.readFromAnsysReader (L23Np,   "L23_Np");
-		MyImportFunctions.readFromAnsysReader (L23An,   "L23_An_R1");
-		MyImportFunctions.readFromAnsysReader (L23AnR1, "L23_An_R1");
-		MyImportFunctions.readFromAnsysReader (L23AnR2, "L23_An_R2");
-		MyImportFunctions.readFromAnsysReader (L23AnR3, "L23_An_R3");
-		MyImportFunctions.readFromAnsysReader (L23AnR4, "L23_An_R4");
+		MyImportFunctions.readFromAnsysReader (L23Np,   "L23_NP");
+		MyImportFunctions.readFromAnsysReader (L23An,   "L23_AN_R1");
+		MyImportFunctions.readFromAnsysReader (L23AnR1, "L23_AN_R1");
+		MyImportFunctions.readFromAnsysReader (L23AnR2, "L23_AN_R2");
+		MyImportFunctions.readFromAnsysReader (L23AnR3, "L23_AN_R3");
+		MyImportFunctions.readFromAnsysReader (L23AnR4, "L23_AN_R4");
 		
-		MyImportFunctions.readFromAnsysReader (L34Np,   "L34_Np");
-		MyImportFunctions.readFromAnsysReader (L34An,   "L34_An_R1");
-		MyImportFunctions.readFromAnsysReader (L34AnR1, "L34_An_R1");
-		MyImportFunctions.readFromAnsysReader (L34AnR2, "L34_An_R2");
-		MyImportFunctions.readFromAnsysReader (L34AnR3, "L34_An_R3");
-		MyImportFunctions.readFromAnsysReader (L34AnR4, "L34_An_R4");
+		MyImportFunctions.readFromAnsysReader (L34Np,   "L34_NP");
+		MyImportFunctions.readFromAnsysReader (L34An,   "L34_AN_R1");
+		MyImportFunctions.readFromAnsysReader (L34AnR1, "L34_AN_R1");
+		MyImportFunctions.readFromAnsysReader (L34AnR2, "L34_AN_R2");
+		MyImportFunctions.readFromAnsysReader (L34AnR3, "L34_AN_R3");
+		MyImportFunctions.readFromAnsysReader (L34AnR4, "L34_AN_R4");
 		
-		MyImportFunctions.readFromAnsysReader (L45Np,   "L45_Np");
-		MyImportFunctions.readFromAnsysReader (L45An,   "L45_An_R1");
-		MyImportFunctions.readFromAnsysReader (L45AnR1, "L45_An_R1");
-		MyImportFunctions.readFromAnsysReader (L45AnR2, "L45_An_R2");
-		MyImportFunctions.readFromAnsysReader (L45AnR3, "L45_An_R3");
-		MyImportFunctions.readFromAnsysReader (L45AnR4, "L45_An_R4");
+		MyImportFunctions.readFromAnsysReader (L45Np,   "L45_NP");
+		MyImportFunctions.readFromAnsysReader (L45An,   "L45_AN_R1");
+		MyImportFunctions.readFromAnsysReader (L45AnR1, "L45_AN_R1");
+		MyImportFunctions.readFromAnsysReader (L45AnR2, "L45_AN_R2");
+		MyImportFunctions.readFromAnsysReader (L45AnR3, "L45_AN_R3");
+		MyImportFunctions.readFromAnsysReader (L45AnR4, "L45_AN_R4");
 		
-		MyImportFunctions.readFromAnsysReader (L51Np,   "L51_Np");
-		MyImportFunctions.readFromAnsysReader (L51An,   "L51_An_R1");
-		MyImportFunctions.readFromAnsysReader (L51AnR1, "L51_An_R1");
-		MyImportFunctions.readFromAnsysReader (L51AnR2, "L51_An_R2");
-		MyImportFunctions.readFromAnsysReader (L51AnR3, "L51_An_R3");
-		MyImportFunctions.readFromAnsysReader (L51AnR4, "L51_An_R4");
+		MyImportFunctions.readFromAnsysReader (L51Np,   "L51_NP");
+		MyImportFunctions.readFromAnsysReader (L51An,   "L51_AN_R1");
+		MyImportFunctions.readFromAnsysReader (L51AnR1, "L51_AN_R1");
+		MyImportFunctions.readFromAnsysReader (L51AnR2, "L51_AN_R2");
+		MyImportFunctions.readFromAnsysReader (L51AnR3, "L51_AN_R3");
+		MyImportFunctions.readFromAnsysReader (L51AnR4, "L51_AN_R4");
 		
 							
 		// For more order store FE disc parts in ComponentLists
@@ -2689,6 +2688,8 @@ public class LSSBase extends RootModel {
 	       viewer.setBlendSourceFactor (BlendFactor.GL_ONE_MINUS_CONSTANT_ALPHA);
 	       viewer.setBlendDestFactor (BlendFactor.GL_ONE_MINUS_SRC_ALPHA);     
 	       viewer.setBackgroundColor (Color.WHITE);
+	       
+	       viewer.setOrthographicView (true);
 	       viewer.setEye (new Point3d(0.246044, -0.434962, 0.280147));
 	       viewer.setCenter (new Point3d(-0.00429798, 0.0110715, 0.0601638));
        }
