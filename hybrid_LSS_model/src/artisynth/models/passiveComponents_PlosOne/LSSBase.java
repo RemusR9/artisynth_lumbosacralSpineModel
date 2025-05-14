@@ -1077,90 +1077,90 @@ public class LSSBase extends RootModel {
 		// connect to RB
 		// L12Np
 		LinkedList<FemNode3d> L12Npo, L12Npu, L12Npa;
-		L12Npo = MyImportFunctions.ImportNodeSet ("L12_Npo", L12Np);
-		L12Npu = MyImportFunctions.ImportNodeSet ("L12_Npu", L12Np);
-		L12Npa = MyImportFunctions.ImportNodeSet ("L12_Npa", L12Np);
+		L12Npo = MyImportFunctions.ImportNodeSet ("L12_NPO", L12Np);
+		L12Npu = MyImportFunctions.ImportNodeSet ("L12_NPU", L12Np);
+		L12Npa = MyImportFunctions.ImportNodeSet ("L12_NPA", L12Np);
 		// L23Np
 		LinkedList<FemNode3d> L23Npo, L23Npu, L23Npa;
-		L23Npo = MyImportFunctions.ImportNodeSet ("L23_Npo", L23Np);
-		L23Npu = MyImportFunctions.ImportNodeSet ("L23_Npu", L23Np);
-		L23Npa = MyImportFunctions.ImportNodeSet ("L23_Npa", L23Np);
+		L23Npo = MyImportFunctions.ImportNodeSet ("L23_NPO", L23Np);
+		L23Npu = MyImportFunctions.ImportNodeSet ("L23_NPU", L23Np);
+		L23Npa = MyImportFunctions.ImportNodeSet ("L23_NPA", L23Np);
 		// L34Np
 		LinkedList<FemNode3d> L34Npo, L34Npu, L34Npa;
-		L34Npo = MyImportFunctions.ImportNodeSet ("L34_Npo", L34Np);
-		L34Npu = MyImportFunctions.ImportNodeSet ("L34_Npu", L34Np);
-		L34Npa = MyImportFunctions.ImportNodeSet ("L34_Npa", L34Np);
+		L34Npo = MyImportFunctions.ImportNodeSet ("L34_NPO", L34Np);
+		L34Npu = MyImportFunctions.ImportNodeSet ("L34_NPU", L34Np);
+		L34Npa = MyImportFunctions.ImportNodeSet ("L34_NPA", L34Np);
 		// L45Np
 		LinkedList<FemNode3d> L45Npo, L45Npu, L45Npa;
-		L45Npo = MyImportFunctions.ImportNodeSet ("L45_Npo", L45Np);
-		L45Npu = MyImportFunctions.ImportNodeSet ("L45_Npu", L45Np);
-		L45Npa = MyImportFunctions.ImportNodeSet ("L45_Npa", L45Np);
+		L45Npo = MyImportFunctions.ImportNodeSet ("L45_NPO", L45Np);
+		L45Npu = MyImportFunctions.ImportNodeSet ("L45_NPU", L45Np);
+		L45Npa = MyImportFunctions.ImportNodeSet ("L45_NPA", L45Np);
 		// L51Np
 		LinkedList<FemNode3d> L51Npo, L51Npu, L51Npa;
-		L51Npo = MyImportFunctions.ImportNodeSet ("L51_Npo", L51Np);
-		L51Npu = MyImportFunctions.ImportNodeSet ("L51_Npu", L51Np);
-		L51Npa = MyImportFunctions.ImportNodeSet ("L51_Npa", L51Np);
+		L51Npo = MyImportFunctions.ImportNodeSet ("L51_NPO", L51Np);
+		L51Npu = MyImportFunctions.ImportNodeSet ("L51_NPU", L51Np);
+		L51Npa = MyImportFunctions.ImportNodeSet ("L51_NPA", L51Np);
 		
 		// L12An		
 		LinkedList<LinkedList<FemNode3d>> L12AnR1234o, L12AnR1234u;
 		L12AnR1234o = new LinkedList<LinkedList<FemNode3d>>();
 		L12AnR1234u = new LinkedList<LinkedList<FemNode3d>>();
-		L12AnR1234o.add(MyImportFunctions.ImportNodeSet ("L12_An_R1o", L12AnR1));
-		L12AnR1234u.add(MyImportFunctions.ImportNodeSet ("L12_An_R1u", L12AnR1));
-		L12AnR1234o.add(MyImportFunctions.ImportNodeSet ("L12_An_R2o", L12AnR2));
-		L12AnR1234u.add(MyImportFunctions.ImportNodeSet ("L12_An_R2u", L12AnR2));
-		L12AnR1234o.add(MyImportFunctions.ImportNodeSet ("L12_An_R3o", L12AnR3));
-		L12AnR1234u.add(MyImportFunctions.ImportNodeSet ("L12_An_R3u", L12AnR3));
-		L12AnR1234o.add(MyImportFunctions.ImportNodeSet ("L12_An_R4o", L12AnR4));
-		L12AnR1234u.add(MyImportFunctions.ImportNodeSet ("L12_An_R4u", L12AnR4));
+		L12AnR1234o.add(MyImportFunctions.ImportNodeSet ("L12_AN_R1O", L12AnR1));
+		L12AnR1234u.add(MyImportFunctions.ImportNodeSet ("L12_AN_R1U", L12AnR1));
+		L12AnR1234o.add(MyImportFunctions.ImportNodeSet ("L12_AN_R2O", L12AnR2));
+		L12AnR1234u.add(MyImportFunctions.ImportNodeSet ("L12_AN_R2U", L12AnR2));
+		L12AnR1234o.add(MyImportFunctions.ImportNodeSet ("L12_AN_R3O", L12AnR3));
+		L12AnR1234u.add(MyImportFunctions.ImportNodeSet ("L12_AN_R3U", L12AnR3));
+		L12AnR1234o.add(MyImportFunctions.ImportNodeSet ("L12_AN_R4O", L12AnR4));
+		L12AnR1234u.add(MyImportFunctions.ImportNodeSet ("L12_AN_R4U", L12AnR4));
 		// L23An
 		LinkedList<LinkedList<FemNode3d>> L23AnR1234o, L23AnR1234u;
 		L23AnR1234o = new LinkedList<LinkedList<FemNode3d>>();
 		L23AnR1234u = new LinkedList<LinkedList<FemNode3d>>();
-		L23AnR1234o.add(MyImportFunctions.ImportNodeSet ("L23_An_R1o", L23AnR1));
-		L23AnR1234u.add(MyImportFunctions.ImportNodeSet ("L23_An_R1u", L23AnR1));
-		L23AnR1234o.add(MyImportFunctions.ImportNodeSet ("L23_An_R2o", L23AnR2));
-		L23AnR1234u.add(MyImportFunctions.ImportNodeSet ("L23_An_R2u", L23AnR2));
-		L23AnR1234o.add(MyImportFunctions.ImportNodeSet ("L23_An_R3o", L23AnR3));
-		L23AnR1234u.add(MyImportFunctions.ImportNodeSet ("L23_An_R3u", L23AnR3));
-		L23AnR1234o.add(MyImportFunctions.ImportNodeSet ("L23_An_R4o", L23AnR4));
-		L23AnR1234u.add(MyImportFunctions.ImportNodeSet ("L23_An_R4u", L23AnR4));
+		L23AnR1234o.add(MyImportFunctions.ImportNodeSet ("L23_AN_R1O", L23AnR1));
+		L23AnR1234u.add(MyImportFunctions.ImportNodeSet ("L23_AN_R1U", L23AnR1));
+		L23AnR1234o.add(MyImportFunctions.ImportNodeSet ("L23_AN_R2O", L23AnR2));
+		L23AnR1234u.add(MyImportFunctions.ImportNodeSet ("L23_AN_R2U", L23AnR2));
+		L23AnR1234o.add(MyImportFunctions.ImportNodeSet ("L23_AN_R3O", L23AnR3));
+		L23AnR1234u.add(MyImportFunctions.ImportNodeSet ("L23_AN_R3U", L23AnR3));
+		L23AnR1234o.add(MyImportFunctions.ImportNodeSet ("L23_AN_R4O", L23AnR4));
+		L23AnR1234u.add(MyImportFunctions.ImportNodeSet ("L23_AN_R4U", L23AnR4));
 		// L34An
 		LinkedList<LinkedList<FemNode3d>> L34AnR1234o, L34AnR1234u;
 		L34AnR1234o = new LinkedList<LinkedList<FemNode3d>>();
 		L34AnR1234u = new LinkedList<LinkedList<FemNode3d>>();
-		L34AnR1234o.add(MyImportFunctions.ImportNodeSet ("L34_An_R1o", L34AnR1));
-		L34AnR1234u.add(MyImportFunctions.ImportNodeSet ("L34_An_R1u", L34AnR1));
-		L34AnR1234o.add(MyImportFunctions.ImportNodeSet ("L34_An_R2o", L34AnR2));
-		L34AnR1234u.add(MyImportFunctions.ImportNodeSet ("L34_An_R2u", L34AnR2));
-		L34AnR1234o.add(MyImportFunctions.ImportNodeSet ("L34_An_R3o", L34AnR3));
-		L34AnR1234u.add(MyImportFunctions.ImportNodeSet ("L34_An_R3u", L34AnR3));
-		L34AnR1234o.add(MyImportFunctions.ImportNodeSet ("L34_An_R4o", L34AnR4));
-		L34AnR1234u.add(MyImportFunctions.ImportNodeSet ("L34_An_R4u", L34AnR4));
+		L34AnR1234o.add(MyImportFunctions.ImportNodeSet ("L34_AN_R1O", L34AnR1));
+		L34AnR1234u.add(MyImportFunctions.ImportNodeSet ("L34_AN_R1U", L34AnR1));
+		L34AnR1234o.add(MyImportFunctions.ImportNodeSet ("L34_AN_R2O", L34AnR2));
+		L34AnR1234u.add(MyImportFunctions.ImportNodeSet ("L34_AN_R2U", L34AnR2));
+		L34AnR1234o.add(MyImportFunctions.ImportNodeSet ("L34_AN_R3O", L34AnR3));
+		L34AnR1234u.add(MyImportFunctions.ImportNodeSet ("L34_AN_R3U", L34AnR3));
+		L34AnR1234o.add(MyImportFunctions.ImportNodeSet ("L34_AN_R4O", L34AnR4));
+		L34AnR1234u.add(MyImportFunctions.ImportNodeSet ("L34_AN_R4U", L34AnR4));
 		// L45An
 		LinkedList<LinkedList<FemNode3d>> L45AnR1234o, L45AnR1234u;
 		L45AnR1234o = new LinkedList<LinkedList<FemNode3d>>();
 		L45AnR1234u = new LinkedList<LinkedList<FemNode3d>>();
-		L45AnR1234o.add(MyImportFunctions.ImportNodeSet ("L45_An_R1o", L45AnR1));
-		L45AnR1234u.add(MyImportFunctions.ImportNodeSet ("L45_An_R1u", L45AnR1));
-		L45AnR1234o.add(MyImportFunctions.ImportNodeSet ("L45_An_R2o", L45AnR2));
-		L45AnR1234u.add(MyImportFunctions.ImportNodeSet ("L45_An_R2u", L45AnR2));
-		L45AnR1234o.add(MyImportFunctions.ImportNodeSet ("L45_An_R3o", L45AnR3));
-		L45AnR1234u.add(MyImportFunctions.ImportNodeSet ("L45_An_R3u", L45AnR3));
-		L45AnR1234o.add(MyImportFunctions.ImportNodeSet ("L45_An_R4o", L45AnR4));
-		L45AnR1234u.add(MyImportFunctions.ImportNodeSet ("L45_An_R4u", L45AnR4));
+		L45AnR1234o.add(MyImportFunctions.ImportNodeSet ("L45_AN_R1O", L45AnR1));
+		L45AnR1234u.add(MyImportFunctions.ImportNodeSet ("L45_AN_R1U", L45AnR1));
+		L45AnR1234o.add(MyImportFunctions.ImportNodeSet ("L45_AN_R2O", L45AnR2));
+		L45AnR1234u.add(MyImportFunctions.ImportNodeSet ("L45_AN_R2U", L45AnR2));
+		L45AnR1234o.add(MyImportFunctions.ImportNodeSet ("L45_AN_R3O", L45AnR3));
+		L45AnR1234u.add(MyImportFunctions.ImportNodeSet ("L45_AN_R3U", L45AnR3));
+		L45AnR1234o.add(MyImportFunctions.ImportNodeSet ("L45_AN_R4O", L45AnR4));
+		L45AnR1234u.add(MyImportFunctions.ImportNodeSet ("L45_AN_R4U", L45AnR4));
 		// L51An
 		LinkedList<LinkedList<FemNode3d>> L51AnR1234o, L51AnR1234u;
 		L51AnR1234o = new LinkedList<LinkedList<FemNode3d>>();
 		L51AnR1234u = new LinkedList<LinkedList<FemNode3d>>();
-		L51AnR1234o.add(MyImportFunctions.ImportNodeSet ("L51_An_R1o", L51AnR1));
-		L51AnR1234u.add(MyImportFunctions.ImportNodeSet ("L51_An_R1u", L51AnR1));
-		L51AnR1234o.add(MyImportFunctions.ImportNodeSet ("L51_An_R2o", L51AnR2));
-		L51AnR1234u.add(MyImportFunctions.ImportNodeSet ("L51_An_R2u", L51AnR2));
-		L51AnR1234o.add(MyImportFunctions.ImportNodeSet ("L51_An_R3o", L51AnR3));
-		L51AnR1234u.add(MyImportFunctions.ImportNodeSet ("L51_An_R3u", L51AnR3));
-		L51AnR1234o.add(MyImportFunctions.ImportNodeSet ("L51_An_R4o", L51AnR4));
-		L51AnR1234u.add(MyImportFunctions.ImportNodeSet ("L51_An_R4u", L51AnR4));
+		L51AnR1234o.add(MyImportFunctions.ImportNodeSet ("L51_AN_R1O", L51AnR1));
+		L51AnR1234u.add(MyImportFunctions.ImportNodeSet ("L51_AN_R1U", L51AnR1));
+		L51AnR1234o.add(MyImportFunctions.ImportNodeSet ("L51_AN_R2O", L51AnR2));
+		L51AnR1234u.add(MyImportFunctions.ImportNodeSet ("L51_AN_R2U", L51AnR2));
+		L51AnR1234o.add(MyImportFunctions.ImportNodeSet ("L51_AN_R3O", L51AnR3));
+		L51AnR1234u.add(MyImportFunctions.ImportNodeSet ("L51_AN_R3U", L51AnR3));
+		L51AnR1234o.add(MyImportFunctions.ImportNodeSet ("L51_AN_R4O", L51AnR4));
+		L51AnR1234u.add(MyImportFunctions.ImportNodeSet ("L51_AN_R4U", L51AnR4));
 
 		
 		// Remove nodes which might be listed in more than one set --> preventing errors
